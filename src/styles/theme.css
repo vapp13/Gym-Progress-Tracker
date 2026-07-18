@@ -1,0 +1,18 @@
+:root {
+  /* Dark theme (default) */
+  --color-bg: #121212;
+  --color-surface: #1e1e1e;
+  --color-text: #f5f5f5;
+  --color-text-muted: #a3a3a3;
+  --color-primary: #4f9dfd;
+  --color-border: #2e2e2e;
+}
+
+[data-theme='light'] {
+  --color-bg: #ffffff;
+  --color-surface: #f5f5f5;
+  --color-text: #121212;
+  --color-text-muted: #5c5c5c;
+  --color-primary: #2563eb;
+  --color-border: #e0e0e0;
+}
