@@ -30,13 +30,39 @@ export async function updateSession(sessionId, updates) {
   await updateDoc(sessionDoc, updates);
 }
 
-export async function completeSession(sessionId, exercises) {
+function calculateVolume(sets) {
+  return sets.reduce((total, set) => {
+    if (!set.completed) return total;
+    return total + (set.reps || 0) * (set.weight || 0);
+  }, 0);
+}
+
+async function writeProgressLogs(userId, exercises) {
+  const logsRef = collection(db, 'users', userId, 'progressLogs');
+  const today = new Date().toISOString().split('T')[0];
+
+  const writes = exercises.map((ex) => {
+    const volume = calculateVolume(ex.sets);
+    return addDoc(logsRef, {
+      date: today,
+      exerciseId: ex.exerciseId,
+      metric: 'volume',
+      value: volume,
+    });
+  });
+
+  await Promise.all(writes);
+}
+
+export async function completeSession(sessionId, userId, exercises) {
   const sessionDoc = doc(db, 'workoutSessions', sessionId);
   await updateDoc(sessionDoc, {
     exercises,
     status: 'completed',
     completedAt: serverTimestamp(),
   });
+
+  await writeProgressLogs(userId, exercises);
 }
 
 export async function getUserSessions(userId) {

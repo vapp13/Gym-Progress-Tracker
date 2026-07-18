@@ -1,9 +1,17 @@
+import { useNavigate } from 'react-router-dom';
 import './PlanCard.css';
 
 function PlanCard({ plan, onClick, onDelete }) {
+  const navigate = useNavigate();
+
   const handleDelete = (e) => {
     e.stopPropagation();
     onDelete();
+  };
+
+  const handleStart = (e) => {
+    e.stopPropagation();
+    navigate(`/plans/${plan.id}/session`);
   };
 
   return (
@@ -18,6 +26,13 @@ function PlanCard({ plan, onClick, onDelete }) {
         <span className={`difficulty-tag difficulty-${plan.experienceLevel}`}>
           {plan.experienceLevel}
         </span>
+      </button>
+      <button
+        className="plan-card-start"
+        onClick={handleStart}
+        aria-label={`Start ${plan.name}`}
+      >
+        ▶
       </button>
       <button
         className="plan-card-delete"

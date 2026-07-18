@@ -5,6 +5,7 @@ import ExerciseLibrary from './pages/ExerciseLibrary';
 import WorkoutPlans from './pages/WorkoutPlans';
 import WorkoutPlanEditor from './pages/WorkoutPlanEditor';
 import ProtectedRoute from './features/auth/ProtectedRoute';
+import WorkoutSession from './pages/WorkoutSession';
 
 function App() {
   return (
@@ -48,6 +49,14 @@ function App() {
           element={
             <ProtectedRoute>
               <WorkoutPlanEditor />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/plans/:planId/session"
+          element={
+            <ProtectedRoute>
+              <WorkoutSession />
             </ProtectedRoute>
           }
         />

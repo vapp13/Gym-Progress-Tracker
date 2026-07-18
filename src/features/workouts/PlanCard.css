@@ -55,3 +55,19 @@
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
+
+.plan-card-start {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.plan-card-start:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

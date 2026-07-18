@@ -43,7 +43,7 @@ export function useWorkoutSessions() {
   };
 
   const complete = async (sessionId, exercises) => {
-    await completeSession(sessionId, exercises);
+    await completeSession(sessionId, user.uid, exercises);
     await fetchSessions();
   };
 
