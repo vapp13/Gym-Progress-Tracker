@@ -6,6 +6,18 @@
   --color-text-muted: #a3a3a3;
   --color-primary: #4f9dfd;
   --color-border: #2e2e2e;
+
+  /* New tokens */
+  --color-accent: #f5a623;
+  --color-danger: #e5484d;
+  --color-surface-raised: #262626;
+  --radius-md: 8px;
+  --radius-full: 999px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
 }
 
 [data-theme='light'] {
@@ -15,4 +27,8 @@
   --color-text-muted: #5c5c5c;
   --color-primary: #2563eb;
   --color-border: #e0e0e0;
+
+  --color-accent: #d4870f;
+  --color-danger: #c0392b;
+  --color-surface-raised: #ececec;
 }
