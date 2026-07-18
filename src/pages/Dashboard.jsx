@@ -9,7 +9,10 @@ function Dashboard() {
     <div className="page-container">
       <h1>Dashboard</h1>
       <p>Welcome, {user?.displayName}</p>
-      <Link to="/history">View Workout History</Link>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-start' }}>
+        <Link to="/history">View Workout History</Link>
+        <Link to="/goals">View Goals</Link>
+      </div>
       <div style={{ marginTop: 16 }}>
         <Button variant="danger" onClick={logout}>Sign Out</Button>
       </div>

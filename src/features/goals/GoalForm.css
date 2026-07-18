@@ -1,0 +1,12 @@
+.goal-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.goal-form-actions {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: flex-end;
+  margin-top: var(--space-sm);
+}
