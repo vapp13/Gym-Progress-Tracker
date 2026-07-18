@@ -1,5 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import BottomNav from '../../components/BottomNav';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -12,7 +13,12 @@ function ProtectedRoute({ children }) {
     return <Navigate to="/login" replace />;
   }
 
-  return children;
+  return (
+    <>
+      {children}
+      <BottomNav />
+    </>
+  );
 }
 
 export default ProtectedRoute;
