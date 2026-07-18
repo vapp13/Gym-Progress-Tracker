@@ -5,11 +5,17 @@ import EmptyState from '../components/EmptyState';
 import Button from '../components/Button';
 
 function WorkoutPlans() {
-  const { plans, loading, error } = useWorkoutPlans();
+  const { plans, loading, error, removePlan } = useWorkoutPlans();
   const navigate = useNavigate();
 
   if (loading) return <p>Loading plans...</p>;
   if (error) return <p>Error: {error}</p>;
+
+  const handleDelete = (planId, planName) => {
+    if (window.confirm(`Delete "${planName}"? This can't be undone.`)) {
+      removePlan(planId);
+    }
+  };
 
   return (
     <div className="page-container">
@@ -33,6 +39,7 @@ function WorkoutPlans() {
               key={plan.id}
               plan={plan}
               onClick={() => navigate(`/plans/${plan.id}/edit`)}
+              onDelete={() => handleDelete(plan.id, plan.name)}
             />
           ))}
         </div>
