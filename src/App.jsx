@@ -3,6 +3,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import ExerciseLibrary from './pages/ExerciseLibrary';
 import WorkoutPlans from './pages/WorkoutPlans';
+import WorkoutPlanEditor from './pages/WorkoutPlanEditor';
 import ProtectedRoute from './features/auth/ProtectedRoute';
 
 function App() {
@@ -31,6 +32,22 @@ function App() {
           element={
             <ProtectedRoute>
               <WorkoutPlans />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/plans/new"
+          element={
+            <ProtectedRoute>
+              <WorkoutPlanEditor />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/plans/:id/edit"
+          element={
+            <ProtectedRoute>
+              <WorkoutPlanEditor />
             </ProtectedRoute>
           }
         />

@@ -1,0 +1,60 @@
+.plan-exercise-row {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+
+.plan-exercise-row-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-sm);
+}
+
+.plan-exercise-row-header h4 {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.plan-exercise-row-remove {
+  background: none;
+  border: none;
+  color: var(--color-danger);
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 1rem;
+}
+
+.plan-exercise-row-fields {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
+}
+
+.plan-exercise-row-fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.plan-exercise-row-fields input {
+  font-size: 0.95rem;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-xs) var(--space-sm);
+  min-height: 40px;
+  box-sizing: border-box;
+}
+
+.plan-exercise-row-fields input:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
