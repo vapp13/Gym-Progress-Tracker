@@ -54,7 +54,7 @@ function WorkoutSession() {
   };
 
   if (plansLoading || exercises.length === 0) {
-    return <p>Loading workout...</p>;
+    return <p aria-live="polite">Loading workout...</p>;
   }
 
   return (

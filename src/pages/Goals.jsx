@@ -11,8 +11,8 @@ function Goals() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingGoal, setEditingGoal] = useState(null);
 
-  if (loading) return <p>Loading goals...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <p aria-live="polite">Loading goals...</p>;
+  if (error) return <p aria-live="assertive">Error: {error}</p>;
 
   const openCreateModal = () => {
     setEditingGoal(null);

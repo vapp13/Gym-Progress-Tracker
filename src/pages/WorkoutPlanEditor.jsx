@@ -75,7 +75,7 @@ function WorkoutPlanEditor() {
     navigate('/plans');
   };
 
-  if (isEditMode && loading) return <p>Loading plan...</p>;
+  if (isEditMode && loading) return <p aria-live="polite">Loading plan...</p>;
 
   return (
     <div className="page-container">

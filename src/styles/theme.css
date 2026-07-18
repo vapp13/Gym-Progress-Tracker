@@ -4,12 +4,11 @@
   --color-surface: #1e1e1e;
   --color-text: #f5f5f5;
   --color-text-muted: #a3a3a3;
-  --color-primary: #4f9dfd;
+  --color-primary: #2563eb;
   --color-border: #2e2e2e;
 
-  /* New tokens */
   --color-accent: #f5a623;
-  --color-danger: #e5484d;
+  --color-danger: #f87171;
   --color-surface-raised: #262626;
   --radius-md: 8px;
   --radius-full: 999px;

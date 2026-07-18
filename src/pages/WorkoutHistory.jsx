@@ -5,8 +5,8 @@ import EmptyState from '../components/EmptyState';
 function WorkoutHistory() {
   const { sessions, loading, error } = useWorkoutSessions();
 
-  if (loading) return <p>Loading history...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <p aria-live="polite">Loading history...</p>;
+  if (error) return <p aria-live="assertive">Error: {error}</p>;
 
   const completedSessions = sessions.filter((s) => s.status === 'completed');
 

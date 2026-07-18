@@ -32,7 +32,7 @@ function Progress() {
         </Button>
       </div>
       {measurementsLoading ? (
-        <p>Loading...</p>
+        <p aria-live="polite">Loading...</p>
       ) : (
         <BodyWeightChart measurements={measurements} />
       )}
@@ -41,7 +41,7 @@ function Progress() {
         <h2>Exercise Progress</h2>
         <ExerciseSelector value={selectedExerciseId} onChange={setSelectedExerciseId} />
         {logsLoading ? (
-          <p>Loading...</p>
+          <p aria-live="polite">Loading...</p>
         ) : (
           <ExerciseProgressChart logs={logs} exerciseId={selectedExerciseId} />
         )}

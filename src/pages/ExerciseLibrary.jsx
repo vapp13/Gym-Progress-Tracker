@@ -19,8 +19,8 @@ function ExerciseLibrary() {
     });
   }, [exercises, search, muscleGroup]);
 
-  if (loading) return <p>Loading exercises...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <p aria-live="polite">Loading exercises...</p>;
+  if (error) return <p aria-live="assertive">Error: {error}</p>;
 
   return (
     <div className="page-container">

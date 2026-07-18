@@ -8,8 +8,8 @@ function WorkoutPlans() {
   const { plans, loading, error, removePlan } = useWorkoutPlans();
   const navigate = useNavigate();
 
-  if (loading) return <p>Loading plans...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <p aria-live="polite">Loading plans...</p>;
+  if (error) return <p aria-live="assertive">Error: {error}</p>;
 
   const handleDelete = (planId, planName) => {
     if (window.confirm(`Delete "${planName}"? This can't be undone.`)) {
