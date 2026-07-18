@@ -15,3 +15,45 @@ body {
   max-width: 700px;
   margin: 0 auto;
 }
+
+.difficulty-tag {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 3px;
+  transform: skewX(-8deg);
+  flex-shrink: 0;
+  margin-left: var(--space-sm);
+}
+
+.difficulty-beginner {
+  background-color: var(--color-accent);
+  color: #1a1a1a;
+  opacity: 0.7;
+}
+
+.difficulty-intermediate {
+  background-color: var(--color-accent);
+  color: #1a1a1a;
+  opacity: 0.85;
+}
+
+.difficulty-advanced {
+  background-color: var(--color-accent);
+  color: #1a1a1a;
+  opacity: 1;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-md);
+  gap: var(--space-sm);
+}
+
+.page-header h1 {
+  margin: 0;
+}
