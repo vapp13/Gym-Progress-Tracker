@@ -1,0 +1,19 @@
+.session-summary-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+
+.session-summary-card h3 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  margin: 0 0 4px 0;
+}
+
+.session-summary-meta {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}

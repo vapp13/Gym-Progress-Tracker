@@ -6,6 +6,7 @@ import WorkoutPlans from './pages/WorkoutPlans';
 import WorkoutPlanEditor from './pages/WorkoutPlanEditor';
 import ProtectedRoute from './features/auth/ProtectedRoute';
 import WorkoutSession from './pages/WorkoutSession';
+import WorkoutHistory from './pages/WorkoutHistory';
 
 function App() {
   return (
@@ -57,6 +58,14 @@ function App() {
           element={
             <ProtectedRoute>
               <WorkoutSession />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/history"
+          element={
+            <ProtectedRoute>
+              <WorkoutHistory />
             </ProtectedRoute>
           }
         />
