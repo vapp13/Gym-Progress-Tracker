@@ -1,6 +1,7 @@
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import ExerciseLibrary from './pages/ExerciseLibrary';
 import ProtectedRoute from './features/auth/ProtectedRoute';
 
 function App() {
@@ -13,6 +14,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/exercises"
+          element={
+            <ProtectedRoute>
+              <ExerciseLibrary />
             </ProtectedRoute>
           }
         />

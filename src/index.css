@@ -8,3 +8,10 @@ body {
   font-family: system-ui, -apple-system, sans-serif;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
+
+.page-container {
+  padding: var(--space-md);
+  padding-bottom: 80px; /* room for bottom nav, added next step */
+  max-width: 700px;
+  margin: 0 auto;
+}

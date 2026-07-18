@@ -1,0 +1,15 @@
+.exercise-filters {
+  margin-bottom: var(--space-md);
+}
+
+.filter-chip-row {
+  display: flex;
+  gap: var(--space-sm);
+  overflow-x: auto;
+  padding: var(--space-sm) 0;
+  margin-top: var(--space-sm);
+}
+
+.filter-chip-row::-webkit-scrollbar {
+  display: none;
+}

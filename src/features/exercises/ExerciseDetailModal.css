@@ -1,0 +1,48 @@
+.exercise-detail-media {
+  width: 100%;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-md);
+  display: block;
+}
+
+.exercise-detail-media-placeholder {
+  width: 100%;
+  height: 160px;
+  background-color: var(--color-surface-raised);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  margin-bottom: var(--space-md);
+}
+
+.exercise-detail-meta {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.exercise-detail-badge {
+  font-size: 0.8rem;
+  text-transform: capitalize;
+  background-color: var(--color-surface-raised);
+  color: var(--color-text-muted);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+}
+
+.exercise-detail h4 {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  margin: var(--space-md) 0 4px 0;
+}
+
+.exercise-detail p {
+  margin: 0;
+  color: var(--color-text);
+  line-height: 1.5;
+}

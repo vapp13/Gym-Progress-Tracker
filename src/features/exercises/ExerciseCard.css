@@ -1,0 +1,64 @@
+.exercise-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin-bottom: var(--space-sm);
+  cursor: pointer;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.exercise-card:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.exercise-card h3 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  margin: 0 0 4px 0;
+  color: var(--color-text);
+}
+
+.exercise-card-meta {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.difficulty-tag {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 3px;
+  transform: skewX(-8deg);
+  flex-shrink: 0;
+  margin-left: var(--space-sm);
+}
+
+.difficulty-beginner {
+  background-color: var(--color-accent);
+  color: #1a1a1a;
+  opacity: 0.7;
+}
+
+.difficulty-intermediate {
+  background-color: var(--color-accent);
+  color: #1a1a1a;
+  opacity: 0.85;
+}
+
+.difficulty-advanced {
+  background-color: var(--color-accent);
+  color: #1a1a1a;
+  opacity: 1;
+}
