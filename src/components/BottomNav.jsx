@@ -5,13 +5,6 @@ function BottomNav() {
   return (
     <nav className="bottom-nav">
       <NavLink
-        to="/"
-        end
-        className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}
-      >
-        Dashboard
-      </NavLink>
-      <NavLink
         to="/exercises"
         className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}
       >
@@ -22,6 +15,12 @@ function BottomNav() {
         className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}
       >
         Plans
+      </NavLink>
+      <NavLink
+        to="/progress"
+        className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}
+      >
+        Progress
       </NavLink>
     </nav>
   );

@@ -8,6 +8,7 @@ import ProtectedRoute from './features/auth/ProtectedRoute';
 import WorkoutSession from './pages/WorkoutSession';
 import WorkoutHistory from './pages/WorkoutHistory';
 import Goals from './pages/Goals';
+import Progress from './pages/Progress';
 
 function App() {
   return (
@@ -75,6 +76,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Goals />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/progress"
+          element={
+            <ProtectedRoute>
+              <Progress />
             </ProtectedRoute>
           }
         />
