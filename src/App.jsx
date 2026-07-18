@@ -1,14 +1,23 @@
-import { useTheme } from './context/ThemeContext';
+import { HashRouter, Routes, Route } from 'react-router-dom';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import ProtectedRoute from './features/auth/ProtectedRoute';
 
 function App() {
-  const { theme, toggleTheme } = useTheme();
-
   return (
-    <div>
-      <h1>Fitness App</h1>
-      <p>Current theme: {theme}</p>
-      <button onClick={toggleTheme}>Toggle Theme</button>
-    </div>
+    <HashRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </HashRouter>
   );
 }
 
