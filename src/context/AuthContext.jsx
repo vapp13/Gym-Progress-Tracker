@@ -5,7 +5,8 @@ import {
   signInWithPopup,
   signOut,
 } from 'firebase/auth';
-import { auth } from '../lib/firebase';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from '../lib/firebase';
 
 const AuthContext = createContext();
 
@@ -14,18 +15,36 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Listens for sign-in/sign-out and restores session on page refresh
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
     });
 
-    return unsubscribe; // cleanup listener on unmount
+    return unsubscribe;
   }, []);
+
+  const createUserProfile = async (currentUser) => {
+    const userRef = doc(db, 'users', currentUser.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+      await setDoc(userRef, {
+        displayName: currentUser.displayName,
+        email: currentUser.email,
+        photoURL: currentUser.photoURL,
+        createdAt: serverTimestamp(),
+        preferences: {
+          theme: 'dark',
+          units: 'metric',
+        },
+      });
+    }
+  };
 
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
+    const result = await signInWithPopup(auth, provider);
+    await createUserProfile(result.user);
   };
 
   const logout = () => signOut(auth);
