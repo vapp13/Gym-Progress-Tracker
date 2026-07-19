@@ -1,32 +1,47 @@
-.bottom-nav {
+.bottom-nav-wrapper {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 100;
   display: flex;
-  background-color: var(--color-surface);
-  border-top: 1px solid var(--color-border);
-  z-index: 50;
-  padding-bottom: env(safe-area-inset-bottom);
+  justify-content: center;
+  padding: 0 var(--space-md) calc(var(--space-sm) + env(safe-area-inset-bottom));
+  pointer-events: none;
+}
+
+.bottom-nav {
+  pointer-events: auto;
+  display: flex;
+  gap: 4px;
+  width: 100%;
+  max-width: 420px;
+  border-radius: var(--radius-full);
+  padding: 6px;
+  box-shadow: var(--shadow-lg);
 }
 
 .bottom-nav-item {
   flex: 1;
-  text-align: center;
-  padding: var(--space-sm) 0;
-  min-height: 44px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 2px;
+  padding: 8px 0;
+  min-height: 44px;
+  border-radius: var(--radius-full);
   font-family: var(--font-display);
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--color-text-faint);
   text-decoration: none;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .bottom-nav-item.active {
   color: var(--color-primary);
-  font-weight: 700;
+  background-color: var(--color-primary-soft);
 }
 
 .bottom-nav-item:focus-visible {

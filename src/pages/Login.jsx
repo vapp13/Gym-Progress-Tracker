@@ -1,12 +1,14 @@
 import { Navigate } from 'react-router-dom';
+import { Dumbbell } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import GoogleSignInButton from '../features/auth/GoogleSignInButton';
+import './Login.css';
 
 function Login() {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p aria-live="polite" style={{ padding: 24 }}>Loading...</p>;
   }
 
   if (user) {
@@ -14,10 +16,20 @@ function Login() {
   }
 
   return (
-    <div>
-      <h1>Welcome to Fitness App</h1>
-      <p>Sign in to track your workouts and progress.</p>
-      <GoogleSignInButton />
+    <div className="login-page">
+      <div className="login-glow" aria-hidden="true" />
+      <div className="login-content">
+        <div className="login-logo">
+          <Dumbbell size={28} strokeWidth={2.5} />
+        </div>
+        <h1 className="login-title">Gym Progress Tracker</h1>
+        <p className="login-subtitle">
+          Track workouts, hit your goals, and watch your progress add up.
+        </p>
+        <div className="login-action">
+          <GoogleSignInButton />
+        </div>
+      </div>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './features/auth/ProtectedRoute';
 import Login from './pages/Login';
+import PageLoader from './components/PageLoader';
 
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const ExerciseLibrary = lazy(() => import('./pages/ExerciseLibrary'));
@@ -15,7 +16,7 @@ const Progress = lazy(() => import('./pages/Progress'));
 function App() {
   return (
     <HashRouter>
-      <Suspense fallback={<p aria-live="polite">Loading...</p>}>
+      <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route

@@ -1,17 +1,27 @@
 .exercise-card {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 12px;
   width: 100%;
   text-align: left;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   padding: var(--space-md);
   margin-bottom: var(--space-sm);
   cursor: pointer;
   min-height: 44px;
   box-sizing: border-box;
+  font-family: var(--font-body);
+  transition: transform 0.2s var(--ease-out), border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+@media (hover: hover) {
+  .exercise-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-md);
+  }
 }
 
 .exercise-card:focus-visible {
@@ -19,15 +29,32 @@
   outline-offset: 2px;
 }
 
+.exercise-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.exercise-card-main {
+  flex: 1;
+  min-width: 0;
+}
+
 .exercise-card h3 {
   font-family: var(--font-display);
-  font-size: 1rem;
-  margin: 0 0 4px 0;
+  font-size: var(--text-base);
+  margin: 0 0 2px 0;
   color: var(--color-text);
 }
 
 .exercise-card-meta {
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
   color: var(--color-text-muted);
   margin: 0;
   text-transform: capitalize;

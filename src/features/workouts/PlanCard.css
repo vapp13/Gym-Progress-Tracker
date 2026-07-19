@@ -3,8 +3,17 @@
   align-items: center;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   margin-bottom: var(--space-sm);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s var(--ease-out);
+}
+
+@media (hover: hover) {
+  .plan-card:hover {
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
 }
 
 .plan-card-main-button {
@@ -12,12 +21,14 @@
   justify-content: space-between;
   align-items: center;
   flex: 1;
+  min-width: 0;
   text-align: left;
   background: none;
   border: none;
   padding: var(--space-md);
   cursor: pointer;
   min-height: 44px;
+  font-family: var(--font-body);
 }
 
 .plan-card-main-button:focus-visible {
@@ -25,49 +36,61 @@
   outline-offset: -2px;
 }
 
+.plan-card-main {
+  min-width: 0;
+}
+
 .plan-card h3 {
   font-family: var(--font-display);
-  font-size: 1rem;
-  margin: 0 0 4px 0;
+  font-size: var(--text-base);
+  margin: 0 0 2px 0;
   color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .plan-card-meta {
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
   color: var(--color-text-muted);
   margin: 0;
   text-transform: capitalize;
 }
 
+.plan-card-start,
 .plan-card-delete {
   background: none;
   border: none;
-  color: var(--color-danger);
   cursor: pointer;
   min-width: 44px;
   min-height: 44px;
-  font-size: 0.9rem;
   flex-shrink: 0;
-  margin-right: var(--space-sm);
-}
-
-.plan-card-delete:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  transition: background-color 0.15s ease;
 }
 
 .plan-card-start {
-  background: none;
-  border: none;
   color: var(--color-primary);
-  cursor: pointer;
-  min-width: 44px;
-  min-height: 44px;
-  font-size: 1rem;
-  flex-shrink: 0;
 }
 
-.plan-card-start:focus-visible {
+.plan-card-start:hover {
+  background-color: var(--color-primary-soft);
+}
+
+.plan-card-delete {
+  color: var(--color-danger);
+  margin-right: var(--space-sm);
+}
+
+.plan-card-delete:hover {
+  background-color: var(--color-danger-soft);
+}
+
+.plan-card-start:focus-visible,
+.plan-card-delete:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }

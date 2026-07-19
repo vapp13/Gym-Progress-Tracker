@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Plus } from 'lucide-react';
 import { useMeasurements } from '../hooks/useMeasurements';
 import { useProgressLogs } from '../hooks/useProgressLogs';
 import BodyWeightChart from '../features/progress/BodyWeightChart';
@@ -7,6 +8,7 @@ import ExerciseSelector from '../features/progress/ExerciseSelector';
 import ExerciseProgressChart from '../features/progress/ExerciseProgressChart';
 import Modal from '../components/Modal';
 import Button from '../components/Button';
+import { SkeletonCard } from '../components/Skeleton';
 
 function Progress() {
   const { measurements, loading: measurementsLoading, addEntry } = useMeasurements();
@@ -27,25 +29,25 @@ function Progress() {
 
       <div className="page-header">
         <h2>Body Weight</h2>
-        <Button variant="secondary" onClick={() => setIsModalOpen(true)}>
-          + Add Measurement
+        <Button variant="secondary" size="sm" icon={Plus} onClick={() => setIsModalOpen(true)}>
+          Add
         </Button>
       </div>
       {measurementsLoading ? (
-        <p aria-live="polite">Loading...</p>
+        <SkeletonCard />
       ) : (
         <BodyWeightChart measurements={measurements} />
       )}
 
-      <div style={{ marginTop: 'var(--space-lg)' }}>
-        <h2>Exercise Progress</h2>
+      <div className="section-title">Exercise Progress</div>
+      <div style={{ marginBottom: 'var(--space-md)' }}>
         <ExerciseSelector value={selectedExerciseId} onChange={setSelectedExerciseId} />
-        {logsLoading ? (
-          <p aria-live="polite">Loading...</p>
-        ) : (
-          <ExerciseProgressChart logs={logs} exerciseId={selectedExerciseId} />
-        )}
       </div>
+      {logsLoading ? (
+        <SkeletonCard />
+      ) : (
+        <ExerciseProgressChart logs={logs} exerciseId={selectedExerciseId} />
+      )}
 
       <Modal
         isOpen={isModalOpen}

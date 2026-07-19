@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { Play, Trash2 } from 'lucide-react';
 import './PlanCard.css';
 
 function PlanCard({ plan, onClick, onDelete }) {
@@ -27,19 +28,11 @@ function PlanCard({ plan, onClick, onDelete }) {
           {plan.experienceLevel}
         </span>
       </button>
-      <button
-        className="plan-card-start"
-        onClick={handleStart}
-        aria-label={`Start ${plan.name}`}
-      >
-        ▶
+      <button className="plan-card-start" onClick={handleStart} aria-label={`Start ${plan.name}`}>
+        <Play size={16} fill="currentColor" />
       </button>
-      <button
-        className="plan-card-delete"
-        onClick={handleDelete}
-        aria-label={`Delete ${plan.name}`}
-      >
-        ✕
+      <button className="plan-card-delete" onClick={handleDelete} aria-label={`Delete ${plan.name}`}>
+        <Trash2 size={16} />
       </button>
     </div>
   );

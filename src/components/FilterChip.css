@@ -1,7 +1,8 @@
 .filter-chip {
   font-family: var(--font-display);
-  font-size: 0.85rem;
-  padding: var(--space-xs) var(--space-md);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  padding: 8px 16px;
   border-radius: var(--radius-full);
   border: 1px solid var(--color-border);
   background-color: var(--color-surface);
@@ -9,7 +10,11 @@
   cursor: pointer;
   white-space: nowrap;
   min-height: 36px;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition: background-color 0.2s var(--ease-out), color 0.2s ease, border-color 0.2s ease, transform 0.15s var(--ease-spring);
+}
+
+.filter-chip:active {
+  transform: scale(0.95);
 }
 
 .filter-chip:focus-visible {
@@ -18,7 +23,8 @@
 }
 
 .filter-chip-active {
-  background-color: var(--color-accent);
-  border-color: var(--color-accent);
-  color: #1a1a1a;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 4px 14px var(--color-primary-glow);
 }

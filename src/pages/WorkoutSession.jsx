@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { CheckCircle } from 'lucide-react';
 import { useWorkoutPlans } from '../hooks/useWorkoutPlans';
 import { useWorkoutSessions } from '../hooks/useWorkoutSessions';
 import SessionExerciseCard from '../features/sessions/SessionExerciseCard';
 import Button from '../components/Button';
+import { SkeletonCard } from '../components/Skeleton';
 
 function buildInitialExercises(plan) {
   return plan.exercises.map((planEx) => ({
@@ -54,12 +56,19 @@ function WorkoutSession() {
   };
 
   if (plansLoading || exercises.length === 0) {
-    return <p aria-live="polite">Loading workout...</p>;
+    return (
+      <div className="page-container" aria-live="polite">
+        <SkeletonCard />
+        <div style={{ marginTop: 12 }}><SkeletonCard /></div>
+      </div>
+    );
   }
 
   return (
     <div className="page-container">
-      <h1>Workout in Progress</h1>
+      <div className="page-header">
+        <h1>Workout in Progress</h1>
+      </div>
 
       {exercises.map((exercise, index) => (
         <SessionExerciseCard
@@ -69,7 +78,7 @@ function WorkoutSession() {
         />
       ))}
 
-      <Button variant="primary" onClick={handleFinish}>
+      <Button variant="primary" icon={CheckCircle} onClick={handleFinish} style={{ width: '100%' }}>
         Finish Workout
       </Button>
     </div>

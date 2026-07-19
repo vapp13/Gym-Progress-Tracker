@@ -1,27 +1,28 @@
 import { NavLink } from 'react-router-dom';
+import { Dumbbell, ClipboardList, TrendingUp } from 'lucide-react';
 import './BottomNav.css';
+
+const ITEMS = [
+  { to: '/exercises', label: 'Exercises', icon: Dumbbell },
+  { to: '/plans', label: 'Plans', icon: ClipboardList },
+  { to: '/progress', label: 'Progress', icon: TrendingUp },
+];
 
 function BottomNav() {
   return (
-    <nav className="bottom-nav">
-      <NavLink
-        to="/exercises"
-        className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}
-      >
-        Exercises
-      </NavLink>
-      <NavLink
-        to="/plans"
-        className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}
-      >
-        Plans
-      </NavLink>
-      <NavLink
-        to="/progress"
-        className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}
-      >
-        Progress
-      </NavLink>
+    <nav className="bottom-nav-wrapper">
+      <div className="bottom-nav glass">
+        {ITEMS.map(({ to, label, icon: Icon }) => (
+          <NavLink
+            key={to}
+            to={to}
+            className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}
+          >
+            <Icon size={20} strokeWidth={2.25} />
+            <span>{label}</span>
+          </NavLink>
+        ))}
+      </div>
     </nav>
   );
 }

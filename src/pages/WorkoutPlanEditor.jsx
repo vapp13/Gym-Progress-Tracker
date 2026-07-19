@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Plus, Save } from 'lucide-react';
 import { useWorkoutPlans } from '../hooks/useWorkoutPlans';
 import PlanMetaForm from '../features/workouts/PlanMetaForm';
 import PlanExerciseRow from '../features/workouts/PlanExerciseRow';
@@ -75,18 +76,20 @@ function WorkoutPlanEditor() {
     navigate('/plans');
   };
 
-  if (isEditMode && loading) return <p aria-live="polite">Loading plan...</p>;
+  if (isEditMode && loading) return <p aria-live="polite" style={{ padding: 24 }}>Loading plan...</p>;
 
   return (
     <div className="page-container">
-      <h1>{isEditMode ? 'Edit Plan' : 'New Plan'}</h1>
+      <div className="page-header">
+        <h1>{isEditMode ? 'Edit Plan' : 'New Plan'}</h1>
+      </div>
 
       <PlanMetaForm meta={meta} onChange={setMeta} />
 
       <div className="page-header">
         <h2>Exercises</h2>
-        <Button variant="secondary" onClick={() => setIsPickerOpen(true)}>
-          + Add Exercise
+        <Button variant="secondary" size="sm" icon={Plus} onClick={() => setIsPickerOpen(true)}>
+          Add Exercise
         </Button>
       </div>
 
@@ -99,9 +102,11 @@ function WorkoutPlanEditor() {
         />
       ))}
 
-      <Button variant="primary" onClick={handleSave} disabled={!meta.name}>
-        Save Plan
-      </Button>
+      <div style={{ marginTop: 'var(--space-lg)' }}>
+        <Button variant="primary" icon={Save} onClick={handleSave} disabled={!meta.name} style={{ width: '100%' }}>
+          Save Plan
+        </Button>
+      </div>
 
       <ExercisePicker
         isOpen={isPickerOpen}

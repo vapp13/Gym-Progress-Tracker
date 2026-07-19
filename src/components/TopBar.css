@@ -1,0 +1,40 @@
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 14px var(--space-md);
+}
+
+.top-bar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.top-bar-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px var(--color-primary-glow);
+  flex-shrink: 0;
+}
+
+.top-bar-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-base);
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 400px) {
+  .top-bar-title {
+    font-size: var(--text-sm);
+  }
+}

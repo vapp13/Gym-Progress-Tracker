@@ -1,3 +1,4 @@
+import { Trash2 } from 'lucide-react';
 import ProgressBar from '../../components/ProgressBar';
 import './GoalCard.css';
 
@@ -27,14 +28,14 @@ function GoalCard({ goal, onClick, onDelete }) {
         <p className="goal-card-values">
           {goal.currentValue} → {goal.targetValue}
         </p>
-        <ProgressBar current={percent} target={100} />
+        <ProgressBar current={percent} target={100} color="var(--color-accent)" />
       </button>
       <button
         className="goal-card-delete"
         onClick={handleDelete}
         aria-label={`Delete ${goal.type} goal`}
       >
-        ✕
+        <Trash2 size={16} />
       </button>
     </div>
   );

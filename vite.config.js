@@ -8,11 +8,11 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Fitness App',
-        short_name: 'Fitness',
+        name: 'Gym Progress Tracker',
+        short_name: 'Gym Tracker',
         description: 'Track workouts, goals, and progress.',
-        theme_color: '#121212',
-        background_color: '#121212',
+        theme_color: '#0a0b0f',
+        background_color: '#0a0b0f',
         display: 'standalone',
         start_url: '/Gym-Progress-Tracker/#/',
         scope: '/Gym-Progress-Tracker/',

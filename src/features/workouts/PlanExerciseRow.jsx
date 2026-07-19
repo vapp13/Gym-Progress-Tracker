@@ -1,3 +1,4 @@
+import { X } from 'lucide-react';
 import './PlanExerciseRow.css';
 
 function PlanExerciseRow({ entry, onChange, onRemove }) {
@@ -14,7 +15,7 @@ function PlanExerciseRow({ entry, onChange, onRemove }) {
           onClick={onRemove}
           aria-label={`Remove ${entry.exerciseName}`}
         >
-          ✕
+          <X size={16} />
         </button>
       </div>
 

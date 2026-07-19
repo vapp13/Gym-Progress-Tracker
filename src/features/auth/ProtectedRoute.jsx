@@ -1,12 +1,13 @@
-import { Navigate, Link } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import TopBar from '../../components/TopBar';
 import BottomNav from '../../components/BottomNav';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p aria-live="polite" style={{ padding: 24 }}>Loading...</p>;
   }
 
   if (!user) {
@@ -15,9 +16,7 @@ function ProtectedRoute({ children }) {
 
   return (
     <>
-      <header className="top-bar">
-        <Link to="/" className="top-bar-home">Fitness App</Link>
-      </header>
+      <TopBar />
       {children}
       <BottomNav />
     </>

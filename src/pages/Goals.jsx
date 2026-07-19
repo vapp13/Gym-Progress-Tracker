@@ -1,17 +1,18 @@
 import { useState } from 'react';
+import { Plus } from 'lucide-react';
 import { useGoals } from '../hooks/useGoals';
 import GoalCard from '../features/goals/GoalCard';
 import GoalForm from '../features/goals/GoalForm';
 import Modal from '../components/Modal';
 import EmptyState from '../components/EmptyState';
 import Button from '../components/Button';
+import Skeleton from '../components/Skeleton';
 
 function Goals() {
   const { goals, loading, error, addGoal, editGoal, removeGoal } = useGoals();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingGoal, setEditingGoal] = useState(null);
 
-  if (loading) return <p aria-live="polite">Loading goals...</p>;
   if (error) return <p aria-live="assertive">Error: {error}</p>;
 
   const openCreateModal = () => {
@@ -43,12 +44,16 @@ function Goals() {
     <div className="page-container">
       <div className="page-header">
         <h1>Goals</h1>
-        <Button variant="primary" onClick={openCreateModal}>
-          + New Goal
+        <Button variant="primary" icon={Plus} onClick={openCreateModal}>
+          New Goal
         </Button>
       </div>
 
-      {goals.length === 0 ? (
+      {loading ? (
+        <div aria-live="polite" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {[1, 2].map((i) => <Skeleton key={i} height="90px" radius="var(--radius-lg)" />)}
+        </div>
+      ) : goals.length === 0 ? (
         <EmptyState
           message="You haven't set any goals yet."
           actionLabel="Create your first goal"

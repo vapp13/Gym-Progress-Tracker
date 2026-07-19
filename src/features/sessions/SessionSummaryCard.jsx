@@ -1,3 +1,4 @@
+import { CheckCircle2 } from 'lucide-react';
 import './SessionSummaryCard.css';
 
 function formatDuration(startedAt, completedAt) {
@@ -18,6 +19,7 @@ function SessionSummaryCard({ session }) {
 
   return (
     <div className="session-summary-card">
+      <span className="card-icon card-icon-success"><CheckCircle2 size={18} /></span>
       <div className="session-summary-main">
         <h3>{date}</h3>
         <p className="session-summary-meta">

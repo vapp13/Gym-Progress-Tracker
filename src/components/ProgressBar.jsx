@@ -1,6 +1,6 @@
 import './ProgressBar.css';
 
-function ProgressBar({ current, target, label }) {
+function ProgressBar({ current, target, label, color = 'var(--color-primary)' }) {
   const percent = target > 0 ? Math.min(100, Math.round((current / target) * 100)) : 0;
 
   return (
@@ -13,7 +13,7 @@ function ProgressBar({ current, target, label }) {
         aria-valuemin={0}
         aria-valuemax={100}
       >
-        <div className="progress-bar-fill" style={{ width: `${percent}%` }} />
+        <div className="progress-bar-fill" style={{ width: `${percent}%`, backgroundColor: color }} />
       </div>
       <span className="progress-bar-percent">{percent}%</span>
     </div>

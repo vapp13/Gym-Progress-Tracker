@@ -3,7 +3,7 @@ import { useExercises } from '../../hooks/useExercises';
 function ExerciseSelector({ value, onChange }) {
   const { exercises, loading } = useExercises();
 
-  if (loading) return <p>Loading exercises...</p>;
+  if (loading) return <p aria-live="polite">Loading exercises...</p>;
 
   return (
     <label className="form-field">

@@ -4,6 +4,7 @@ import ExerciseFilters from '../features/exercises/ExerciseFilters';
 import ExerciseCard from '../features/exercises/ExerciseCard';
 import ExerciseDetailModal from '../features/exercises/ExerciseDetailModal';
 import EmptyState from '../components/EmptyState';
+import Skeleton from '../components/Skeleton';
 
 function ExerciseLibrary() {
   const { exercises, loading, error } = useExercises();
@@ -19,12 +20,13 @@ function ExerciseLibrary() {
     });
   }, [exercises, search, muscleGroup]);
 
-  if (loading) return <p aria-live="polite">Loading exercises...</p>;
   if (error) return <p aria-live="assertive">Error: {error}</p>;
 
   return (
     <div className="page-container">
-      <h1>Exercise Library</h1>
+      <div className="page-header">
+        <h1>Exercises</h1>
+      </div>
 
       <ExerciseFilters
         exercises={exercises}
@@ -34,7 +36,13 @@ function ExerciseLibrary() {
         onMuscleGroupChange={setMuscleGroup}
       />
 
-      {filteredExercises.length === 0 ? (
+      {loading ? (
+        <div aria-live="polite" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {[1, 2, 3, 4].map((i) => (
+            <Skeleton key={i} height="66px" radius="var(--radius-lg)" />
+          ))}
+        </div>
+      ) : filteredExercises.length === 0 ? (
         <EmptyState message="No exercises match your search." />
       ) : (
         <div>

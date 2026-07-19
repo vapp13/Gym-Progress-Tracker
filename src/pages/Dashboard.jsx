@@ -1,21 +1,38 @@
-import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import Button from '../components/Button';
+import WelcomeCard from '../features/dashboard/WelcomeCard';
+import CurrentGoalCard from '../features/dashboard/CurrentGoalCard';
+import TodaysWorkoutCard from '../features/dashboard/TodaysWorkoutCard';
+import WeeklyProgressCard from '../features/dashboard/WeeklyProgressCard';
+import StreakCard from '../features/dashboard/StreakCard';
+import RecentWorkoutsCard from '../features/dashboard/RecentWorkoutsCard';
+import PersonalRecordsCard from '../features/dashboard/PersonalRecordsCard';
+import BodyMetricsCard from '../features/dashboard/BodyMetricsCard';
+import QuickActionsCard from '../features/dashboard/QuickActionsCard';
 
 function Dashboard() {
-  const { user, logout } = useAuth();
-
   return (
     <div className="page-container">
-      <h1>Dashboard</h1>
-      <p>Welcome, {user?.displayName}</p>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-start' }}>
-        <Link to="/history">View Workout History</Link>
-        <Link to="/goals">View Goals</Link>
+      <WelcomeCard />
+
+      <div className="card-grid card-grid-2" style={{ marginBottom: 'var(--space-md)' }}>
+        <TodaysWorkoutCard />
+        <CurrentGoalCard />
       </div>
-      <div style={{ marginTop: 16 }}>
-        <Button variant="danger" onClick={logout}>Sign Out</Button>
+
+      <div className="card-grid card-grid-2" style={{ marginBottom: 'var(--space-md)' }}>
+        <WeeklyProgressCard />
+        <StreakCard />
       </div>
+
+      <div className="card-grid card-grid-2" style={{ marginBottom: 'var(--space-md)' }}>
+        <RecentWorkoutsCard />
+        <PersonalRecordsCard />
+      </div>
+
+      <div style={{ marginBottom: 'var(--space-md)' }}>
+        <BodyMetricsCard />
+      </div>
+
+      <QuickActionsCard />
     </div>
   );
 }

@@ -1,0 +1,61 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-lg);
+  box-sizing: border-box;
+}
+
+.login-glow {
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--color-primary-glow) 0%, transparent 65%);
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+.login-content {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  animation: page-enter 0.5s var(--ease-out);
+}
+
+.login-logo {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--space-lg) auto;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px var(--color-primary-glow);
+}
+
+.login-title {
+  font-size: var(--text-2xl);
+  margin: 0 0 var(--space-sm) 0;
+  letter-spacing: -0.02em;
+}
+
+.login-subtitle {
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  margin: 0 0 var(--space-xl) 0;
+}
+
+.login-action {
+  max-width: 320px;
+  margin: 0 auto;
+}
