@@ -4,7 +4,7 @@ import './TopBar.css';
 
 function TopBar() {
   return (
-    <header className="top-bar glass">
+    <header className="top-bar">
       <Link to="/" className="top-bar-brand">
         <span className="top-bar-icon">
           <Dumbbell size={18} strokeWidth={2.5} />

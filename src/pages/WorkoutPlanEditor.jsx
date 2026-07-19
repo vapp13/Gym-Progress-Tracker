@@ -102,8 +102,11 @@ function WorkoutPlanEditor() {
         />
       ))}
 
-      <div style={{ marginTop: 'var(--space-lg)' }}>
-        <Button variant="primary" icon={Save} onClick={handleSave} disabled={!meta.name} style={{ width: '100%' }}>
+      <div style={{ marginTop: 'var(--space-lg)', display: 'flex', gap: 'var(--space-sm)' }}>
+        <Button variant="secondary" onClick={() => navigate('/plans')} style={{ flex: 1 }}>
+          Cancel
+        </Button>
+        <Button variant="primary" icon={Save} onClick={handleSave} disabled={!meta.name} style={{ flex: 1 }}>
           Save Plan
         </Button>
       </div>

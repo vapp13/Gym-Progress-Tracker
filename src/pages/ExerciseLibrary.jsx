@@ -3,22 +3,32 @@ import { useExercises } from '../hooks/useExercises';
 import ExerciseFilters from '../features/exercises/ExerciseFilters';
 import ExerciseCard from '../features/exercises/ExerciseCard';
 import ExerciseDetailModal from '../features/exercises/ExerciseDetailModal';
+import AdvancedFilterModal from '../features/exercises/AdvancedFilterModal';
 import EmptyState from '../components/EmptyState';
 import Skeleton from '../components/Skeleton';
+import { toArray } from '../utils/textFormatting';
+
+const DEFAULT_ADVANCED_FILTERS = { muscleGroupMain: null, muscleGroupSupport: null };
 
 function ExerciseLibrary() {
   const { exercises, loading, error } = useExercises();
   const [search, setSearch] = useState('');
   const [muscleGroup, setMuscleGroup] = useState(null);
+  const [advancedFilters, setAdvancedFilters] = useState(DEFAULT_ADVANCED_FILTERS);
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState(null);
+
+  const hasActiveAdvancedFilters = Boolean(advancedFilters.muscleGroupMain || advancedFilters.muscleGroupSupport);
 
   const filteredExercises = useMemo(() => {
     return exercises.filter((ex) => {
       const matchesSearch = ex.name.toLowerCase().includes(search.toLowerCase());
       const matchesGroup = !muscleGroup || ex.muscleGroup === muscleGroup;
-      return matchesSearch && matchesGroup;
+      const matchesMain = !advancedFilters.muscleGroupMain || toArray(ex.muscleGroupMain).includes(advancedFilters.muscleGroupMain);
+      const matchesSupport = !advancedFilters.muscleGroupSupport || toArray(ex.muscleGroupSupport).includes(advancedFilters.muscleGroupSupport);
+      return matchesSearch && matchesGroup && matchesMain && matchesSupport;
     });
-  }, [exercises, search, muscleGroup]);
+  }, [exercises, search, muscleGroup, advancedFilters]);
 
   if (error) return <p aria-live="assertive">Error: {error}</p>;
 
@@ -34,6 +44,8 @@ function ExerciseLibrary() {
         onSearchChange={setSearch}
         activeMuscleGroup={muscleGroup}
         onMuscleGroupChange={setMuscleGroup}
+        onOpenAdvanced={() => setIsAdvancedOpen(true)}
+        hasActiveAdvancedFilters={hasActiveAdvancedFilters}
       />
 
       {loading ? (
@@ -60,6 +72,14 @@ function ExerciseLibrary() {
         exercise={selectedExercise}
         isOpen={!!selectedExercise}
         onClose={() => setSelectedExercise(null)}
+      />
+
+      <AdvancedFilterModal
+        isOpen={isAdvancedOpen}
+        onClose={() => setIsAdvancedOpen(false)}
+        exercises={exercises}
+        filters={advancedFilters}
+        onChange={setAdvancedFilters}
       />
     </div>
   );

@@ -1,17 +1,18 @@
 import { NavLink } from 'react-router-dom';
-import { Dumbbell, ClipboardList, TrendingUp } from 'lucide-react';
+import { Dumbbell, ClipboardList, TrendingUp, Target } from 'lucide-react';
 import './BottomNav.css';
 
 const ITEMS = [
   { to: '/exercises', label: 'Exercises', icon: Dumbbell },
   { to: '/plans', label: 'Plans', icon: ClipboardList },
+  { to: '/goals', label: 'Goals', icon: Target },
   { to: '/progress', label: 'Progress', icon: TrendingUp },
 ];
 
 function BottomNav() {
   return (
     <nav className="bottom-nav-wrapper">
-      <div className="bottom-nav glass">
+      <div className="bottom-nav">
         {ITEMS.map(({ to, label, icon: Icon }) => (
           <NavLink
             key={to}
