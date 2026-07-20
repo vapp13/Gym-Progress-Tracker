@@ -1,0 +1,33 @@
+.visibility-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) 0;
+  font-size: var(--text-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.visibility-row:last-of-type {
+  border-bottom: none;
+}
+
+.visibility-toggle {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  min-height: 32px;
+}
+
+.visibility-toggle.is-friends {
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.visibility-toggle.is-private {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-muted);
+}

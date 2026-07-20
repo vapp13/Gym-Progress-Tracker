@@ -10,6 +10,7 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { bumpPublicStreak } from './publicProfile.service';
 
 const sessionsRef = collection(db, 'workoutSessions');
 
@@ -63,6 +64,7 @@ export async function completeSession(sessionId, userId, exercises) {
   });
 
   await writeProgressLogs(userId, exercises);
+  await bumpPublicStreak(userId);
 }
 
 export async function getUserSessions(userId) {

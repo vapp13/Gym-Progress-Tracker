@@ -6,6 +6,19 @@
   background-color: var(--color-bg-elevated);
   border-bottom: 1px solid var(--color-border);
   box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.top-bar-avatar-link {
+  display: flex;
+  border-radius: var(--radius-full);
+}
+
+.top-bar-avatar-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .top-bar-brand {

@@ -7,6 +7,7 @@ import {
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
+import { ensurePublicProfile } from '../services/publicProfile.service';
 
 const AuthContext = createContext();
 
@@ -18,6 +19,16 @@ export function AuthProvider({ children }) {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
+
+      // Runs on every login (not just first-ever sign-in), so accounts
+      // created before the profile/friends feature existed still get a
+      // public profile doc backfilled automatically.
+      if (currentUser) {
+        ensurePublicProfile(currentUser.uid, {
+          displayName: currentUser.displayName,
+          photoURL: currentUser.photoURL,
+        });
+      }
     });
 
     return unsubscribe;
