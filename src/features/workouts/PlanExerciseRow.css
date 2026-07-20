@@ -69,3 +69,61 @@
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px var(--color-primary-soft);
 }
+
+.plan-exercise-row-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--space-sm);
+}
+
+.plan-exercise-row-notes input {
+  font-size: var(--text-sm);
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-xs) var(--space-sm);
+  min-height: 40px;
+  box-sizing: border-box;
+}
+
+.plan-exercise-row-wrapper {
+  margin-bottom: var(--space-sm);
+}
+
+.plan-exercise-row-wrapper.is-superset {
+  border-left: 3px solid var(--color-accent);
+  padding-left: var(--space-sm);
+  margin-left: 2px;
+}
+
+.plan-exercise-row-wrapper .plan-exercise-row {
+  margin-bottom: 0;
+}
+
+.superset-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--color-text-faint);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0 6px 0;
+  min-height: 32px;
+}
+
+.plan-exercise-row-wrapper.is-superset .superset-toggle {
+  color: var(--color-accent);
+}
+
+.superset-toggle:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

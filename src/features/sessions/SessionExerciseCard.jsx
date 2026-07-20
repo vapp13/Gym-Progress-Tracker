@@ -3,7 +3,11 @@ import SetRow from './SetRow';
 import RestTimer from './RestTimer';
 import './SessionExerciseCard.css';
 
-function SessionExerciseCard({ exercise, onChange }) {
+function formatPreviousSets(sets) {
+  return sets.map((s) => `${s.weight}kg × ${s.reps}`).join(', ');
+}
+
+function SessionExerciseCard({ exercise, previous, onChange }) {
   const [restingAfterIndex, setRestingAfterIndex] = useState(null);
 
   const handleSetChange = (setIndex, updatedSet) => {
@@ -22,6 +26,12 @@ function SessionExerciseCard({ exercise, onChange }) {
   return (
     <div className="session-exercise-card">
       <h3>{exercise.exerciseName}</h3>
+
+      {previous?.sets?.length > 0 && (
+        <p className="session-exercise-previous">
+          <span>Previous:</span> {formatPreviousSets(previous.sets)}
+        </p>
+      )}
 
       {exercise.sets.map((set, index) => (
         <div key={index}>

@@ -4,6 +4,12 @@ import Button from '../../components/Button';
 import { toArray } from '../../utils/textFormatting';
 import './AdvancedFilterModal.css';
 
+const DIFFICULTY_LEVELS = [
+  { value: 'beginner', label: 'Beginner', color: 'var(--color-success)' },
+  { value: 'intermediate', label: 'Intermediate', color: 'var(--color-accent)' },
+  { value: 'advanced', label: 'Advanced', color: 'var(--color-danger)' },
+];
+
 function getUniqueValues(exercises, field) {
   const values = new Set();
   exercises.forEach((ex) => toArray(ex[field]).forEach((v) => values.add(v)));
@@ -22,13 +28,32 @@ function AdvancedFilterModal({ isOpen, onClose, exercises, filters, onChange }) 
     onChange({ ...filters, muscleGroupSupport: filters.muscleGroupSupport === value ? null : value });
   };
 
+  const handleDifficultySelect = (value) => {
+    onChange({ ...filters, difficulty: filters.difficulty === value ? null : value });
+  };
+
   const handleClear = () => {
-    onChange({ muscleGroupMain: null, muscleGroupSupport: null });
+    onChange({ muscleGroupMain: null, muscleGroupSupport: null, difficulty: null });
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Advanced Filters">
       <div className="advanced-filter">
+        <div className="advanced-filter-section">
+          <span className="advanced-filter-label">Difficulty</span>
+          <div className="advanced-filter-chips">
+            {DIFFICULTY_LEVELS.map((level) => (
+              <FilterChip
+                key={level.value}
+                label={level.label}
+                active={filters.difficulty === level.value}
+                activeColor={level.color}
+                onClick={() => handleDifficultySelect(level.value)}
+              />
+            ))}
+          </div>
+        </div>
+
         {mainOptions.length > 0 && (
           <div className="advanced-filter-section">
             <span className="advanced-filter-label">Main Muscle</span>
@@ -59,12 +84,6 @@ function AdvancedFilterModal({ isOpen, onClose, exercises, filters, onChange }) 
               ))}
             </div>
           </div>
-        )}
-
-        {mainOptions.length === 0 && supportOptions.length === 0 && (
-          <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>
-            No advanced muscle data available yet.
-          </p>
         )}
 
         <div className="advanced-filter-actions">

@@ -1,9 +1,6 @@
-import { useState } from 'react';
 import { MapPin } from 'lucide-react';
 import Card from '../../components/Card';
-import Button from '../../components/Button';
 import FilterChip from '../../components/FilterChip';
-import { toArray } from '../../utils/textFormatting';
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const TIMES = ['morning', 'afternoon', 'evening'];
@@ -12,20 +9,8 @@ function toggleValue(list, value) {
   return list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
 }
 
-function GymPreferencesForm({ gymPreferences, onSave }) {
-  const [cityArea, setCityArea] = useState(gymPreferences.cityArea || '');
-  const [gymsText, setGymsText] = useState((gymPreferences.preferredGyms || []).join(', '));
-  const [typicalDays, setTypicalDays] = useState(gymPreferences.typicalDays || []);
-  const [typicalTimes, setTypicalTimes] = useState(gymPreferences.typicalTimes || []);
-
-  const handleSave = () => {
-    onSave({
-      cityArea,
-      preferredGyms: toArray(gymsText),
-      typicalDays,
-      typicalTimes,
-    });
-  };
+function GymPreferencesForm({ value, onChange }) {
+  const handleField = (field, val) => onChange({ ...value, [field]: val });
 
   return (
     <Card>
@@ -43,8 +28,8 @@ function GymPreferencesForm({ gymPreferences, onSave }) {
           <input
             type="text"
             placeholder="e.g. Bristol, UK"
-            value={cityArea}
-            onChange={(e) => setCityArea(e.target.value)}
+            value={value.cityArea || ''}
+            onChange={(e) => handleField('cityArea', e.target.value)}
           />
         </label>
 
@@ -53,8 +38,8 @@ function GymPreferencesForm({ gymPreferences, onSave }) {
           <input
             type="text"
             placeholder="e.g. PureGym Bristol, Anytime Fitness"
-            value={gymsText}
-            onChange={(e) => setGymsText(e.target.value)}
+            value={value.preferredGymsText ?? ''}
+            onChange={(e) => handleField('preferredGymsText', e.target.value)}
           />
         </label>
 
@@ -65,8 +50,8 @@ function GymPreferencesForm({ gymPreferences, onSave }) {
               <FilterChip
                 key={day}
                 label={day}
-                active={typicalDays.includes(day)}
-                onClick={() => setTypicalDays((prev) => toggleValue(prev, day))}
+                active={(value.typicalDays || []).includes(day)}
+                onClick={() => handleField('typicalDays', toggleValue(value.typicalDays || [], day))}
               />
             ))}
           </div>
@@ -79,14 +64,12 @@ function GymPreferencesForm({ gymPreferences, onSave }) {
               <FilterChip
                 key={time}
                 label={time}
-                active={typicalTimes.includes(time)}
-                onClick={() => setTypicalTimes((prev) => toggleValue(prev, time))}
+                active={(value.typicalTimes || []).includes(time)}
+                onClick={() => handleField('typicalTimes', toggleValue(value.typicalTimes || [], time))}
               />
             ))}
           </div>
         </div>
-
-        <Button variant="primary" onClick={handleSave}>Save</Button>
       </div>
     </Card>
   );

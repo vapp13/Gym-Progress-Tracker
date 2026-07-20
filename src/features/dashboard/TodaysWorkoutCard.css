@@ -1,0 +1,56 @@
+.todays-workout-change {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+  min-height: 32px;
+}
+
+.todays-workout-change svg {
+  transition: transform 0.2s ease;
+}
+
+.todays-workout-change svg.is-open {
+  transform: rotate(180deg);
+}
+
+.todays-workout-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 6px;
+  padding: 6px;
+  background-color: var(--color-surface-hover);
+  border-radius: var(--radius-md);
+  animation: fade-in 0.15s ease;
+}
+
+.todays-workout-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  text-align: left;
+  min-height: 36px;
+}
+
+.todays-workout-option:hover {
+  background-color: var(--color-surface);
+}
+
+.todays-workout-option.is-selected {
+  color: var(--color-primary);
+  font-weight: 600;
+}

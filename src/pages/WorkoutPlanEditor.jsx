@@ -5,6 +5,7 @@ import { useWorkoutPlans } from '../hooks/useWorkoutPlans';
 import PlanMetaForm from '../features/workouts/PlanMetaForm';
 import PlanExerciseRow from '../features/workouts/PlanExerciseRow';
 import ExercisePicker from '../features/workouts/ExercisePicker';
+import PageHeader from '../components/PageHeader';
 import Button from '../components/Button';
 
 const DEFAULT_META = {
@@ -13,7 +14,12 @@ const DEFAULT_META = {
   daysPerWeek: 3,
   sessionDuration: 45,
   experienceLevel: 'beginner',
+  scheduledDays: [],
 };
+
+function generateEntryId() {
+  return `entry-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
 
 function WorkoutPlanEditor() {
   const { id } = useParams();
@@ -35,8 +41,16 @@ function WorkoutPlanEditor() {
           daysPerWeek: existingPlan.daysPerWeek,
           sessionDuration: existingPlan.sessionDuration,
           experienceLevel: existingPlan.experienceLevel,
+          scheduledDays: existingPlan.scheduledDays || [],
         });
-        setExercises(existingPlan.exercises || []);
+        // Older plans won't have entryId — backfill so grouping/notes work.
+        const withEntryIds = (existingPlan.exercises || []).map((entry) => ({
+          entryId: entry.entryId || generateEntryId(),
+          supersetGroupId: entry.supersetGroupId || null,
+          notes: entry.notes || '',
+          ...entry,
+        }));
+        setExercises(withEntryIds);
       }
     }
   }, [isEditMode, loading, plans, id]);
@@ -45,12 +59,15 @@ function WorkoutPlanEditor() {
     setExercises((prev) => [
       ...prev,
       {
+        entryId: generateEntryId(),
         exerciseId: exercise.id,
         exerciseName: exercise.name,
         targetSets: 3,
         targetReps: 10,
         targetWeight: 0,
         restSeconds: 60,
+        supersetGroupId: null,
+        notes: '',
         order: prev.length,
       },
     ]);
@@ -64,6 +81,28 @@ function WorkoutPlanEditor() {
 
   const handleRemoveExercise = (index) => {
     setExercises((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleToggleSuperset = (index) => {
+    setExercises((prev) => {
+      const current = prev[index];
+      const previous = prev[index - 1];
+      if (!previous) return prev;
+
+      const isLinked = current.supersetGroupId && current.supersetGroupId === previous.supersetGroupId;
+
+      if (isLinked) {
+        // Unlink: only this entry leaves the group.
+        return prev.map((entry, i) => (i === index ? { ...entry, supersetGroupId: null } : entry));
+      }
+
+      const groupId = previous.supersetGroupId || previous.entryId;
+      return prev.map((entry, i) => {
+        if (i === index) return { ...entry, supersetGroupId: groupId };
+        if (i === index - 1 && !entry.supersetGroupId) return { ...entry, supersetGroupId: groupId };
+        return entry;
+      });
+    });
   };
 
   const handleSave = async () => {
@@ -80,9 +119,7 @@ function WorkoutPlanEditor() {
 
   return (
     <div className="page-container">
-      <div className="page-header">
-        <h1>{isEditMode ? 'Edit Plan' : 'New Plan'}</h1>
-      </div>
+      <PageHeader title={isEditMode ? 'Edit Plan' : 'New Plan'} showBack onBack={() => navigate('/plans')} />
 
       <PlanMetaForm meta={meta} onChange={setMeta} />
 
@@ -93,14 +130,23 @@ function WorkoutPlanEditor() {
         </Button>
       </div>
 
-      {exercises.map((entry, index) => (
-        <PlanExerciseRow
-          key={`${entry.exerciseId}-${index}`}
-          entry={entry}
-          onChange={(updated) => handleUpdateExercise(index, updated)}
-          onRemove={() => handleRemoveExercise(index)}
-        />
-      ))}
+      {exercises.map((entry, index) => {
+        const previous = exercises[index - 1];
+        const isLinkedToPrevious = Boolean(
+          previous && entry.supersetGroupId && entry.supersetGroupId === previous.supersetGroupId
+        );
+        return (
+          <PlanExerciseRow
+            key={entry.entryId}
+            entry={entry}
+            isLinkedToPrevious={isLinkedToPrevious}
+            canLinkToPrevious={index > 0}
+            onChange={(updated) => handleUpdateExercise(index, updated)}
+            onRemove={() => handleRemoveExercise(index)}
+            onToggleSuperset={() => handleToggleSuperset(index)}
+          />
+        );
+      })}
 
       <div style={{ marginTop: 'var(--space-lg)', display: 'flex', gap: 'var(--space-sm)' }}>
         <Button variant="secondary" onClick={() => navigate('/plans')} style={{ flex: 1 }}>

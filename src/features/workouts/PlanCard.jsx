@@ -23,6 +23,11 @@ function PlanCard({ plan, onClick, onDelete }) {
           <p className="plan-card-meta">
             {plan.goal} · {plan.daysPerWeek}x/week · {plan.sessionDuration} min
           </p>
+          {plan.scheduledDays?.length > 0 && (
+            <p className="plan-card-schedule">
+              {plan.scheduledDays.map((d) => d.slice(0, 3)).join(' · ').toUpperCase()}
+            </p>
+          )}
         </div>
         <span className={`difficulty-tag difficulty-${plan.experienceLevel}`}>
           {plan.experienceLevel}

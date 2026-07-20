@@ -4,6 +4,7 @@ import { Copy, Check, Settings as SettingsIcon, Users, LogOut } from 'lucide-rea
 import { useAuth } from '../context/AuthContext';
 import { useUserProfile } from '../hooks/useUserProfile';
 import AvatarDisplay from '../features/profile/AvatarDisplay';
+import PageHeader from '../components/PageHeader';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import { SkeletonCard } from '../components/Skeleton';
@@ -24,9 +25,7 @@ function Profile() {
 
   return (
     <div className="page-container">
-      <div className="page-header">
-        <h1>Profile</h1>
-      </div>
+      <PageHeader title="Profile" showBack sticky />
 
       <Card>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>

@@ -5,6 +5,10 @@ import {
   updateSession,
   completeSession,
   getUserSessions,
+  getActiveSession,
+  pauseSession,
+  resumeSession,
+  abandonSession,
 } from '../services/workoutSessions.service';
 
 export function useWorkoutSessions() {
@@ -31,21 +35,59 @@ export function useWorkoutSessions() {
     fetchSessions();
   }, [fetchSessions]);
 
-  const start = async (planId = null) => {
-    const sessionId = await startSession(user.uid, planId);
+  const start = async (planId = null, planName = null) => {
+    const sessionId = await startSession(user.uid, planId, planName);
     await fetchSessions();
     return sessionId;
   };
 
+  // For general updates where the list view should reflect the change.
   const update = async (sessionId, updates) => {
     await updateSession(sessionId, updates);
     await fetchSessions();
   };
 
-  const complete = async (sessionId, exercises) => {
-    await completeSession(sessionId, user.uid, exercises);
+  // For frequent in-session autosaves — writes without refetching the
+  // whole session list, since nothing outside the active session needs
+  // to know about it mid-workout.
+  const saveProgress = async (sessionId, updates) => {
+    await updateSession(sessionId, updates);
+  };
+
+  const complete = async (sessionId, exercises, notes = '') => {
+    await completeSession(sessionId, user.uid, exercises, notes);
     await fetchSessions();
   };
 
-  return { sessions, loading, error, start, update, complete, refetch: fetchSessions };
+  const pause = async (sessionId) => {
+    await pauseSession(sessionId);
+  };
+
+  const resume = async (sessionId) => {
+    await resumeSession(sessionId);
+  };
+
+  const discard = async (sessionId) => {
+    await abandonSession(sessionId);
+    await fetchSessions();
+  };
+
+  const findActiveSession = async () => {
+    return getActiveSession(user.uid);
+  };
+
+  return {
+    sessions,
+    loading,
+    error,
+    start,
+    update,
+    saveProgress,
+    complete,
+    pause,
+    resume,
+    discard,
+    findActiveSession,
+    refetch: fetchSessions,
+  };
 }

@@ -1,16 +1,20 @@
 .set-row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-sm);
   border-radius: var(--radius-md);
   background-color: var(--color-bg);
   margin-bottom: var(--space-xs);
   transition: background-color 0.2s ease;
+  overflow: hidden;
 }
 
 .set-row-completed {
   background-color: var(--color-success-soft);
+}
+
+.set-row-main {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
 }
 
 .set-row-number {
@@ -22,6 +26,18 @@
   text-align: center;
 }
 
+.set-row-type-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-size: 0.65rem;
+}
+
 .set-row-field {
   display: flex;
   flex-direction: column;
@@ -31,7 +47,8 @@
   flex: 1;
 }
 
-.set-row-field input {
+.set-row-field input,
+.set-row-field select {
   font-size: var(--text-sm);
   font-family: var(--font-body);
   color: var(--color-text);
@@ -45,7 +62,8 @@
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.set-row-field input:focus-visible {
+.set-row-field input:focus-visible,
+.set-row-field select:focus-visible {
   outline: none;
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px var(--color-primary-soft);
@@ -56,4 +74,40 @@
   height: 26px;
   cursor: pointer;
   accent-color: var(--color-success);
+}
+
+.set-row-expand {
+  background: none;
+  border: none;
+  color: var(--color-text-faint);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  transition: transform 0.2s var(--ease-out), color 0.15s ease;
+}
+
+.set-row-expand.is-open {
+  transform: rotate(180deg);
+  color: var(--color-primary);
+}
+
+.set-row-expand:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.set-row-details {
+  display: flex;
+  gap: var(--space-sm);
+  padding: 0 var(--space-sm) var(--space-sm) 40px;
+  animation: fade-in 0.15s ease;
+}
+
+.set-row-notes {
+  flex: 2;
 }

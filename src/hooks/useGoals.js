@@ -5,6 +5,10 @@ import {
   getUserGoals,
   updateGoal,
   deleteGoal,
+  setActiveGoal,
+  archiveGoal,
+  completeGoal,
+  unarchiveGoal,
 } from '../services/goals.service';
 
 export function useGoals() {
@@ -32,7 +36,11 @@ export function useGoals() {
   }, [fetchGoals]);
 
   const addGoal = async (goalData) => {
-    await createGoal(user.uid, goalData);
+    const isFirstGoal = goals.length === 0;
+    const newGoalId = await createGoal(user.uid, goalData);
+    if (isFirstGoal) {
+      await setActiveGoal(user.uid, newGoalId);
+    }
     await fetchGoals();
   };
 
@@ -46,5 +54,39 @@ export function useGoals() {
     await fetchGoals();
   };
 
-  return { goals, loading, error, addGoal, editGoal, removeGoal, refetch: fetchGoals };
+  const activateGoal = async (goalId) => {
+    await setActiveGoal(user.uid, goalId);
+    await fetchGoals();
+  };
+
+  const archive = async (goalId) => {
+    await archiveGoal(goalId);
+    await fetchGoals();
+  };
+
+  const complete = async (goalId) => {
+    await completeGoal(goalId);
+    await fetchGoals();
+  };
+
+  // Moves a completed or archived goal back to Active. Doesn't make it
+  // the active goal automatically — that's a separate, deliberate step.
+  const reactivate = async (goalId) => {
+    await unarchiveGoal(goalId);
+    await fetchGoals();
+  };
+
+  return {
+    goals,
+    loading,
+    error,
+    addGoal,
+    editGoal,
+    removeGoal,
+    activateGoal,
+    archive,
+    complete,
+    reactivate,
+    refetch: fetchGoals,
+  };
 }

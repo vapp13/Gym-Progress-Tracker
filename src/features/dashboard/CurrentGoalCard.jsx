@@ -3,15 +3,16 @@ import { Target } from 'lucide-react';
 import { useGoals } from '../../hooks/useGoals';
 import Card from '../../components/Card';
 import ProgressBar from '../../components/ProgressBar';
+import TrendIndicator from '../goals/TrendIndicator';
 import { SkeletonCard } from '../../components/Skeleton';
 import EmptyState from '../../components/EmptyState';
+import { calculateGoalProgress } from '../../utils/goalProgress';
+import { isLegacyGoal, getGoalTypeConfig } from '../../utils/goalTypes';
+import { getGoalRecommendation } from '../../utils/goalRecommendation';
 
-function calculatePercent(startValue, currentValue, targetValue) {
-  const isDecreasing = targetValue < startValue;
-  const numerator = isDecreasing ? startValue - currentValue : currentValue - startValue;
-  const denominator = isDecreasing ? startValue - targetValue : targetValue - startValue;
-  if (!denominator) return 0;
-  return Math.max(0, Math.min(100, Math.round((numerator / denominator) * 100)));
+function getGoalLabel(goal) {
+  if (isLegacyGoal(goal)) return goal.type;
+  return getGoalTypeConfig(goal.type)?.label || goal.type;
 }
 
 function CurrentGoalCard() {
@@ -20,21 +21,27 @@ function CurrentGoalCard() {
 
   if (loading) return <SkeletonCard />;
 
-  const activeGoal = goals.find((g) => g.status === 'active');
+  const activeGoal = goals.find((g) => g.isActive);
 
   return (
-    <Card interactive onClick={() => navigate('/goals')}>
+    <Card interactive onClick={() => activeGoal ? navigate(`/goals/${activeGoal.id}`) : navigate('/goals')}>
       <div className="card-icon-row">
         <span className="card-icon card-icon-primary"><Target size={18} /></span>
         <span className="card-eyebrow">Current Goal</span>
       </div>
       {activeGoal ? (
         <>
-          <h3 style={{ margin: '10px 0 12px 0', textTransform: 'capitalize' }}>{activeGoal.type}</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '10px 0 12px 0' }}>
+            <h3 style={{ margin: 0 }}>{getGoalLabel(activeGoal)}</h3>
+            <TrendIndicator trend={calculateGoalProgress(activeGoal).trend} />
+          </div>
           <ProgressBar
-            current={calculatePercent(activeGoal.startValue, activeGoal.currentValue, activeGoal.targetValue)}
+            current={calculateGoalProgress(activeGoal).percent ?? 0}
             target={100}
           />
+          <p style={{ margin: '10px 0 0 0', fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}>
+            {getGoalRecommendation(activeGoal)}
+          </p>
         </>
       ) : (
         <EmptyState message="No active goal yet." actionLabel="Set a goal" onAction={() => navigate('/goals')} />

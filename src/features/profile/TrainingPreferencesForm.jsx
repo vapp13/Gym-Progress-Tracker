@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { CalendarClock } from 'lucide-react';
 import Card from '../../components/Card';
-import Button from '../../components/Button';
+import { toTitleCase } from '../../utils/textFormatting';
 
 const TIMES = ['morning', 'afternoon', 'evening'];
 const EQUIPMENT = [
@@ -10,9 +9,8 @@ const EQUIPMENT = [
   { value: 'bodyweight', label: 'Bodyweight Only' },
 ];
 
-function TrainingPreferencesForm({ preferences, onSave }) {
-  const [form, setForm] = useState(preferences);
-  const handleField = (field, value) => setForm((prev) => ({ ...prev, [field]: value }));
+function TrainingPreferencesForm({ value, onChange }) {
+  const handleField = (field, val) => onChange({ ...value, [field]: val });
 
   return (
     <Card>
@@ -28,7 +26,7 @@ function TrainingPreferencesForm({ preferences, onSave }) {
             type="number"
             min="1"
             max="7"
-            value={form.daysPerWeek}
+            value={value.daysPerWeek}
             onChange={(e) => handleField('daysPerWeek', Number(e.target.value))}
           />
         </label>
@@ -39,30 +37,28 @@ function TrainingPreferencesForm({ preferences, onSave }) {
             type="number"
             min="10"
             step="5"
-            value={form.sessionDuration}
+            value={value.sessionDuration}
             onChange={(e) => handleField('sessionDuration', Number(e.target.value))}
           />
         </label>
 
         <label className="form-field">
           <span>Preferred training time</span>
-          <select value={form.preferredTime} onChange={(e) => handleField('preferredTime', e.target.value)}>
+          <select value={value.preferredTime} onChange={(e) => handleField('preferredTime', e.target.value)}>
             {TIMES.map((time) => (
-              <option key={time} value={time}>{time}</option>
+              <option key={time} value={time}>{toTitleCase(time)}</option>
             ))}
           </select>
         </label>
 
         <label className="form-field">
           <span>Equipment availability</span>
-          <select value={form.equipment} onChange={(e) => handleField('equipment', e.target.value)}>
+          <select value={value.equipment} onChange={(e) => handleField('equipment', e.target.value)}>
             {EQUIPMENT.map((eq) => (
               <option key={eq.value} value={eq.value}>{eq.label}</option>
             ))}
           </select>
         </label>
-
-        <Button variant="primary" onClick={() => onSave(form)}>Save</Button>
       </div>
     </Card>
   );

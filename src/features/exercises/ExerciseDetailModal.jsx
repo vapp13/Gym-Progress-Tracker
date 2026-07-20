@@ -1,14 +1,25 @@
+import { useNavigate } from 'react-router-dom';
+import { TrendingUp } from 'lucide-react';
 import Modal from '../../components/Modal';
+import Button from '../../components/Button';
 import { splitNumberedSteps, toArray } from '../../utils/textFormatting';
+import { normalizeDifficulty } from '../../utils/difficulty';
 import './ExerciseDetailModal.css';
 
 function ExerciseDetailModal({ exercise, isOpen, onClose }) {
+  const navigate = useNavigate();
   if (!exercise) return null;
 
   const steps = splitNumberedSteps(exercise.instructions);
   const isNumbered = steps.length > 1;
   const mainMuscles = toArray(exercise.muscleGroupMain);
   const supportMuscles = toArray(exercise.muscleGroupSupport);
+  const difficulty = normalizeDifficulty(exercise.difficulty);
+
+  const handleViewHistory = () => {
+    onClose();
+    navigate(`/exercises/${exercise.id}/history`);
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={exercise.name}>
@@ -28,9 +39,9 @@ function ExerciseDetailModal({ exercise, isOpen, onClose }) {
         <div className="exercise-detail-meta">
           <span className="exercise-detail-badge">{exercise.muscleGroup}</span>
           <span className="exercise-detail-badge">{exercise.equipment}</span>
-          {exercise.difficulty && (
-            <span className={`difficulty-tag difficulty-${exercise.difficulty}`}>
-              {exercise.difficulty}
+          {difficulty && (
+            <span className={`difficulty-tag difficulty-${difficulty}`}>
+              {difficulty}
             </span>
           )}
         </div>
@@ -77,6 +88,15 @@ function ExerciseDetailModal({ exercise, isOpen, onClose }) {
             <p>{exercise.tips}</p>
           </>
         )}
+
+        <Button
+          variant="secondary"
+          icon={TrendingUp}
+          onClick={handleViewHistory}
+          style={{ width: '100%', marginTop: 'var(--space-md)' }}
+        >
+          View History
+        </Button>
       </div>
     </Modal>
   );

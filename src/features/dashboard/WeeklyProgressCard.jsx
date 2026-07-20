@@ -1,6 +1,7 @@
 import { CalendarCheck } from 'lucide-react';
 import { useWorkoutSessions } from '../../hooks/useWorkoutSessions';
-import { useWorkoutPlans } from '../../hooks/useWorkoutPlans';
+import { useUserProfile } from '../../hooks/useUserProfile';
+import { useGoals } from '../../hooks/useGoals';
 import Card from '../../components/Card';
 import ProgressRing from '../../components/ProgressRing';
 import { SkeletonCard } from '../../components/Skeleton';
@@ -17,9 +18,10 @@ function startOfWeek() {
 
 function WeeklyProgressCard() {
   const { sessions, loading: sessionsLoading } = useWorkoutSessions();
-  const { plans, loading: plansLoading } = useWorkoutPlans();
+  const { data: profile, loading: profileLoading } = useUserProfile();
+  const { goals, loading: goalsLoading } = useGoals();
 
-  if (sessionsLoading || plansLoading) return <SkeletonCard />;
+  if (sessionsLoading || profileLoading || goalsLoading || !profile) return <SkeletonCard />;
 
   const weekStart = startOfWeek();
   const completedThisWeek = sessions.filter((s) => {
@@ -27,7 +29,8 @@ function WeeklyProgressCard() {
     return s.completedAt.toDate() >= weekStart;
   }).length;
 
-  const target = plans[0]?.daysPerWeek || 3;
+  const activeFrequencyGoal = goals.find((g) => g.isActive && g.type === 'frequency');
+  const target = activeFrequencyGoal?.targetValue || profile.trainingPreferences?.daysPerWeek || 3;
   const percent = Math.round((completedThisWeek / target) * 100);
 
   return (

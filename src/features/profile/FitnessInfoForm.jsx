@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { Zap } from 'lucide-react';
 import Card from '../../components/Card';
-import Button from '../../components/Button';
+import { toTitleCase } from '../../utils/textFormatting';
 
 const GOALS = [
   { value: 'lose-weight', label: 'Lose Weight' },
@@ -12,10 +11,16 @@ const GOALS = [
 ];
 
 const EXPERIENCE_LEVELS = ['beginner', 'intermediate', 'advanced'];
+const ACTIVITY_LEVELS = [
+  { value: 'sedentary', label: 'Sedentary (little to no exercise)' },
+  { value: 'light', label: 'Light (1-3 days/week)' },
+  { value: 'moderate', label: 'Moderate (3-5 days/week)' },
+  { value: 'active', label: 'Active (6-7 days/week)' },
+  { value: 'very-active', label: 'Very Active (physical job or 2x/day)' },
+];
 
-function FitnessInfoForm({ profile, onSave }) {
-  const [form, setForm] = useState(profile);
-  const handleField = (field, value) => setForm((prev) => ({ ...prev, [field]: value }));
+function FitnessInfoForm({ value, onChange }) {
+  const handleField = (field, val) => onChange({ ...value, [field]: val });
 
   return (
     <Card>
@@ -27,7 +32,7 @@ function FitnessInfoForm({ profile, onSave }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)', marginTop: 'var(--space-md)' }}>
         <label className="form-field">
           <span>Main goal</span>
-          <select value={form.goal} onChange={(e) => handleField('goal', e.target.value)}>
+          <select value={value.goal} onChange={(e) => handleField('goal', e.target.value)}>
             {GOALS.map((g) => (
               <option key={g.value} value={g.value}>{g.label}</option>
             ))}
@@ -36,14 +41,21 @@ function FitnessInfoForm({ profile, onSave }) {
 
         <label className="form-field">
           <span>Experience level</span>
-          <select value={form.experienceLevel} onChange={(e) => handleField('experienceLevel', e.target.value)}>
+          <select value={value.experienceLevel} onChange={(e) => handleField('experienceLevel', e.target.value)}>
             {EXPERIENCE_LEVELS.map((level) => (
-              <option key={level} value={level}>{level}</option>
+              <option key={level} value={level}>{toTitleCase(level)}</option>
             ))}
           </select>
         </label>
 
-        <Button variant="primary" onClick={() => onSave(form)}>Save</Button>
+        <label className="form-field">
+          <span>Activity level</span>
+          <select value={value.activityLevel || 'moderate'} onChange={(e) => handleField('activityLevel', e.target.value)}>
+            {ACTIVITY_LEVELS.map((level) => (
+              <option key={level.value} value={level.value}>{level.label}</option>
+            ))}
+          </select>
+        </label>
       </div>
     </Card>
   );

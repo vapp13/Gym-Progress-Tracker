@@ -1,5 +1,6 @@
 import { useWorkoutSessions } from '../hooks/useWorkoutSessions';
 import SessionSummaryCard from '../features/sessions/SessionSummaryCard';
+import PageHeader from '../components/PageHeader';
 import EmptyState from '../components/EmptyState';
 import Skeleton from '../components/Skeleton';
 
@@ -12,9 +13,7 @@ function WorkoutHistory() {
 
   return (
     <div className="page-container">
-      <div className="page-header">
-        <h1>Workout History</h1>
-      </div>
+      <PageHeader title="Workout History" showBack sticky />
 
       {loading ? (
         <div aria-live="polite" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>

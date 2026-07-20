@@ -1,14 +1,23 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus } from 'lucide-react';
+import { Plus, PlayCircle } from 'lucide-react';
 import { useWorkoutPlans } from '../hooks/useWorkoutPlans';
+import { useWorkoutSessions } from '../hooks/useWorkoutSessions';
 import PlanCard from '../features/workouts/PlanCard';
+import PageHeader from '../components/PageHeader';
 import EmptyState from '../components/EmptyState';
 import Button from '../components/Button';
 import Skeleton from '../components/Skeleton';
 
 function WorkoutPlans() {
   const { plans, loading, error, removePlan } = useWorkoutPlans();
+  const { findActiveSession } = useWorkoutSessions();
+  const [activeSession, setActiveSession] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    findActiveSession().then(setActiveSession);
+  }, [findActiveSession]);
 
   if (error) return <p aria-live="assertive">Error: {error}</p>;
 
@@ -20,12 +29,25 @@ function WorkoutPlans() {
 
   return (
     <div className="page-container">
-      <div className="page-header">
-        <h1>Workout Plans</h1>
-        <Button variant="primary" icon={Plus} onClick={() => navigate('/plans/new')}>
+      <PageHeader title="Workout Plans" showBack sticky />
+
+      <div style={{ marginBottom: 'var(--space-md)' }}>
+        <Button variant="primary" icon={Plus} onClick={() => navigate('/plans/new')} style={{ width: '100%' }}>
           New Plan
         </Button>
       </div>
+
+      {activeSession && (
+        <button
+          className="resume-banner"
+          onClick={() => navigate(`/plans/${activeSession.planId}/session`)}
+        >
+          <PlayCircle size={20} />
+          <span>
+            You have a workout {activeSession.status === 'paused' ? 'paused' : 'in progress'} — tap to resume
+          </span>
+        </button>
+      )}
 
       {loading ? (
         <div aria-live="polite" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>

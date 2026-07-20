@@ -1,6 +1,6 @@
 .goal-card {
   display: flex;
-  align-items: stretch;
+  flex-direction: column;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -8,22 +8,31 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.goal-card-active {
+  border-color: var(--color-accent);
+}
+
 @media (hover: hover) {
   .goal-card:hover {
     border-color: var(--color-border-strong);
     box-shadow: var(--shadow-md);
   }
+  .goal-card-active:hover {
+    border-color: var(--color-accent);
+  }
 }
 
 .goal-card-main-button {
-  flex: 1;
+  width: 100%;
   text-align: left;
   background: none;
   border: none;
-  padding: var(--space-md);
+  padding: var(--space-md) var(--space-md) var(--space-sm) var(--space-md);
   cursor: pointer;
   min-height: 44px;
   font-family: var(--font-body);
+  color: var(--color-text);
+  box-sizing: border-box;
 }
 
 .goal-card-main-button:focus-visible {
@@ -43,6 +52,15 @@
   font-size: var(--text-base);
   margin: 0;
   text-transform: capitalize;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text);
+}
+
+.goal-card-active-star {
+  color: var(--color-accent);
+  flex-shrink: 0;
 }
 
 .goal-status {
@@ -56,7 +74,8 @@
   background-color: var(--color-surface-hover);
 }
 
-.goal-status-achieved {
+.goal-status-achieved,
+.goal-status-completed {
   color: var(--color-success);
   background-color: var(--color-success-soft);
 }
@@ -67,28 +86,53 @@
   margin: 0 0 var(--space-sm) 0;
 }
 
-.goal-card-delete {
+.goal-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 var(--space-md) var(--space-sm) var(--space-md);
+}
+
+.goal-card-action-btn {
   background: none;
   border: none;
-  color: var(--color-danger);
+  color: var(--color-text-muted);
   cursor: pointer;
-  min-width: 44px;
-  min-height: 44px;
+  min-width: 36px;
+  min-height: 36px;
   flex-shrink: 0;
-  margin-right: var(--space-sm);
-  align-self: center;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-full);
-  transition: background-color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.goal-card-delete:hover {
-  background-color: var(--color-danger-soft);
+.goal-card-action-btn:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text);
 }
 
-.goal-card-delete:focus-visible {
+.goal-card-action-btn:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+.goal-card-action-star:hover {
+  color: var(--color-accent);
+  background-color: var(--color-accent-soft);
+}
+
+.goal-card-action-restore:hover {
+  color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+}
+
+.goal-card-action-delete {
+  color: var(--color-danger);
+}
+
+.goal-card-action-delete:hover {
+  background-color: var(--color-danger-soft);
+  color: var(--color-danger);
 }

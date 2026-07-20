@@ -9,6 +9,7 @@ const DEFAULT_PROFILE = {
     gender: '',
     goal: 'fitness',
     experienceLevel: 'beginner',
+    activityLevel: 'moderate',
   },
   trainingPreferences: {
     daysPerWeek: 3,
@@ -68,5 +69,18 @@ export function useUserProfile() {
     await fetchProfile();
   };
 
-  return { data, loading, error, saveSection, refetch: fetchProfile };
+  // Single write covering every settings section at once, for the
+  // Settings page's one Save button.
+  const saveAll = async ({ profile, trainingPreferences, gymPreferences, visibility, units }) => {
+    await updateUserProfile(user.uid, {
+      profile: { ...data.profile, ...profile },
+      trainingPreferences: { ...data.trainingPreferences, ...trainingPreferences },
+      gymPreferences: { ...data.gymPreferences, ...gymPreferences },
+      visibility: { ...data.visibility, ...visibility },
+      preferences: { ...data.preferences, units: units ?? data.preferences.units },
+    });
+    await fetchProfile();
+  };
+
+  return { data, loading, error, saveSection, saveAll, refetch: fetchProfile };
 }

@@ -1,7 +1,10 @@
 import { Dumbbell } from 'lucide-react';
+import { normalizeDifficulty } from '../../utils/difficulty';
 import './ExerciseCard.css';
 
 function ExerciseCard({ exercise, onClick }) {
+  const difficulty = normalizeDifficulty(exercise.difficulty);
+
   return (
     <button className="exercise-card" onClick={onClick}>
       <span className="exercise-card-icon"><Dumbbell size={18} /></span>
@@ -11,9 +14,9 @@ function ExerciseCard({ exercise, onClick }) {
           {exercise.muscleGroup} · {exercise.equipment}
         </p>
       </div>
-      {exercise.difficulty && (
-        <span className={`difficulty-tag difficulty-${exercise.difficulty}`}>
-          {exercise.difficulty}
+      {difficulty && (
+        <span className={`difficulty-tag difficulty-${difficulty}`}>
+          {difficulty}
         </span>
       )}
     </button>

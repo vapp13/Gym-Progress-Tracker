@@ -10,11 +10,15 @@ const WorkoutPlans = lazy(() => import('./pages/WorkoutPlans'));
 const WorkoutPlanEditor = lazy(() => import('./pages/WorkoutPlanEditor'));
 const WorkoutSession = lazy(() => import('./pages/WorkoutSession'));
 const WorkoutHistory = lazy(() => import('./pages/WorkoutHistory'));
+const SessionDetail = lazy(() => import('./pages/SessionDetail'));
 const Goals = lazy(() => import('./pages/Goals'));
+const GoalDetail = lazy(() => import('./pages/GoalDetail'));
 const Progress = lazy(() => import('./pages/Progress'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Settings = lazy(() => import('./pages/Settings'));
 const Friends = lazy(() => import('./pages/Friends'));
+const ExerciseHistory = lazy(() => import('./pages/ExerciseHistory'));
+const BodyMetrics = lazy(() => import('./pages/BodyMetrics'));
 
 function App() {
   return (
@@ -79,10 +83,26 @@ function App() {
             }
           />
           <Route
+            path="/history/:sessionId"
+            element={
+              <ProtectedRoute>
+                <SessionDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/goals"
             element={
               <ProtectedRoute>
                 <Goals />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/goals/:goalId"
+            element={
+              <ProtectedRoute>
+                <GoalDetail />
               </ProtectedRoute>
             }
           />
@@ -115,6 +135,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <Friends />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/exercises/:exerciseId/history"
+            element={
+              <ProtectedRoute>
+                <ExerciseHistory />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/body-metrics"
+            element={
+              <ProtectedRoute>
+                <BodyMetrics />
               </ProtectedRoute>
             }
           />

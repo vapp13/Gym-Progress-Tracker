@@ -26,3 +26,11 @@ export function toArray(value) {
     .map((v) => v.trim())
     .filter(Boolean);
 }
+
+// Display-only helper — capitalizes each word for dropdown labels, while
+// leaving the underlying stored value (lowercase) untouched, since other
+// code (e.g. difficulty tag CSS classes) depends on that exact casing.
+export function toTitleCase(str) {
+  if (!str) return str;
+  return str.replace(/(^|[\s-])\S/g, (match) => match.toUpperCase());
+}

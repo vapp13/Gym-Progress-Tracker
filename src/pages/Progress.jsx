@@ -2,19 +2,31 @@ import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { useMeasurements } from '../hooks/useMeasurements';
 import { useProgressLogs } from '../hooks/useProgressLogs';
+import { useGoals } from '../hooks/useGoals';
 import BodyWeightChart from '../features/progress/BodyWeightChart';
 import MeasurementForm from '../features/progress/MeasurementForm';
 import ExerciseSelector from '../features/progress/ExerciseSelector';
 import ExerciseProgressChart from '../features/progress/ExerciseProgressChart';
+import PageHeader from '../components/PageHeader';
 import Modal from '../components/Modal';
 import Button from '../components/Button';
 import { SkeletonCard } from '../components/Skeleton';
 
+const WEIGHT_GOAL_TYPES = ['weight', 'lose-weight', 'gain-weight', 'maintain-weight'];
+
+function getWeightGoalTarget(goal) {
+  if (!goal) return undefined;
+  return goal.metrics ? goal.metrics.target : goal.targetValue;
+}
+
 function Progress() {
   const { measurements, loading: measurementsLoading, addEntry } = useMeasurements();
   const { logs, loading: logsLoading } = useProgressLogs();
+  const { goals, loading: goalsLoading } = useGoals();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedExerciseId, setSelectedExerciseId] = useState('');
+
+  const activeWeightGoal = goals.find((g) => g.isActive && WEIGHT_GOAL_TYPES.includes(g.type));
 
   const handleSaveMeasurement = async (data) => {
     await addEntry(data);
@@ -23,9 +35,7 @@ function Progress() {
 
   return (
     <div className="page-container">
-      <div className="page-header">
-        <h1>Progress</h1>
-      </div>
+      <PageHeader title="Progress" showBack sticky />
 
       <div className="page-header">
         <h2>Body Weight</h2>
@@ -33,10 +43,10 @@ function Progress() {
           Add
         </Button>
       </div>
-      {measurementsLoading ? (
+      {measurementsLoading || goalsLoading ? (
         <SkeletonCard />
       ) : (
-        <BodyWeightChart measurements={measurements} />
+        <BodyWeightChart measurements={measurements} targetWeight={getWeightGoalTarget(activeWeightGoal)} />
       )}
 
       <div className="section-title">Exercise Progress</div>

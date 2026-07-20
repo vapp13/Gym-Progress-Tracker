@@ -4,11 +4,13 @@ import ExerciseFilters from '../features/exercises/ExerciseFilters';
 import ExerciseCard from '../features/exercises/ExerciseCard';
 import ExerciseDetailModal from '../features/exercises/ExerciseDetailModal';
 import AdvancedFilterModal from '../features/exercises/AdvancedFilterModal';
+import PageHeader from '../components/PageHeader';
 import EmptyState from '../components/EmptyState';
 import Skeleton from '../components/Skeleton';
 import { toArray } from '../utils/textFormatting';
+import { normalizeDifficulty } from '../utils/difficulty';
 
-const DEFAULT_ADVANCED_FILTERS = { muscleGroupMain: null, muscleGroupSupport: null };
+const DEFAULT_ADVANCED_FILTERS = { muscleGroupMain: null, muscleGroupSupport: null, difficulty: null };
 
 function ExerciseLibrary() {
   const { exercises, loading, error } = useExercises();
@@ -18,7 +20,9 @@ function ExerciseLibrary() {
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState(null);
 
-  const hasActiveAdvancedFilters = Boolean(advancedFilters.muscleGroupMain || advancedFilters.muscleGroupSupport);
+  const hasActiveAdvancedFilters = Boolean(
+    advancedFilters.muscleGroupMain || advancedFilters.muscleGroupSupport || advancedFilters.difficulty
+  );
 
   const filteredExercises = useMemo(() => {
     return exercises.filter((ex) => {
@@ -26,7 +30,8 @@ function ExerciseLibrary() {
       const matchesGroup = !muscleGroup || ex.muscleGroup === muscleGroup;
       const matchesMain = !advancedFilters.muscleGroupMain || toArray(ex.muscleGroupMain).includes(advancedFilters.muscleGroupMain);
       const matchesSupport = !advancedFilters.muscleGroupSupport || toArray(ex.muscleGroupSupport).includes(advancedFilters.muscleGroupSupport);
-      return matchesSearch && matchesGroup && matchesMain && matchesSupport;
+      const matchesDifficulty = !advancedFilters.difficulty || normalizeDifficulty(ex.difficulty) === advancedFilters.difficulty;
+      return matchesSearch && matchesGroup && matchesMain && matchesSupport && matchesDifficulty;
     });
   }, [exercises, search, muscleGroup, advancedFilters]);
 
@@ -34,9 +39,7 @@ function ExerciseLibrary() {
 
   return (
     <div className="page-container">
-      <div className="page-header">
-        <h1>Exercises</h1>
-      </div>
+      <PageHeader title="Exercises" showBack sticky />
 
       <ExerciseFilters
         exercises={exercises}
