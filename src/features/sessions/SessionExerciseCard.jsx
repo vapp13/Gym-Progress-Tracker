@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { Plus } from 'lucide-react';
 import SetRow from './SetRow';
 import RestTimer from './RestTimer';
+import Button from '../../components/Button';
 import './SessionExerciseCard.css';
 
 function formatPreviousSets(sets) {
@@ -23,6 +25,27 @@ function SessionExerciseCard({ exercise, previous, onChange }) {
     }
   };
 
+  const handleAddSet = () => {
+    const lastSet = exercise.sets[exercise.sets.length - 1];
+    const newSet = {
+      reps: lastSet?.reps ?? 10,
+      weight: lastSet?.weight ?? 0,
+      type: 'working',
+      rpe: null,
+      notes: '',
+      completed: false,
+      completedAt: null,
+    };
+    onChange({ ...exercise, sets: [...exercise.sets, newSet] });
+  };
+
+  const handleRemoveSet = (setIndex) => {
+    if (exercise.sets.length <= 1) return;
+    const updatedSets = exercise.sets.filter((_, i) => i !== setIndex);
+    onChange({ ...exercise, sets: updatedSets });
+    if (restingAfterIndex === setIndex) setRestingAfterIndex(null);
+  };
+
   return (
     <div className="session-exercise-card">
       <h3>{exercise.exerciseName}</h3>
@@ -39,6 +62,8 @@ function SessionExerciseCard({ exercise, previous, onChange }) {
             setNumber={index + 1}
             set={set}
             onChange={(updated) => handleSetChange(index, updated)}
+            onRemove={() => handleRemoveSet(index)}
+            canRemove={exercise.sets.length > 1}
           />
           {restingAfterIndex === index && (
             <RestTimer
@@ -49,6 +74,16 @@ function SessionExerciseCard({ exercise, previous, onChange }) {
           )}
         </div>
       ))}
+
+      <Button
+        variant="secondary"
+        size="sm"
+        icon={Plus}
+        onClick={handleAddSet}
+        style={{ width: '100%', marginTop: 'var(--space-xs)' }}
+      >
+        Add Set
+      </Button>
     </div>
   );
 }

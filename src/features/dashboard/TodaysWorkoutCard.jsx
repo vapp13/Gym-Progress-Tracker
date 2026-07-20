@@ -70,17 +70,37 @@ function TodaysWorkoutCard() {
             </div>
           )}
 
-          <Button
-            variant="primary"
-            icon={PlayCircle}
-            onClick={() => navigate(`/plans/${selectedPlan.id}/session`)}
-            style={{ marginTop: 'var(--space-sm)' }}
-          >
-            Start Workout
-          </Button>
+          <div style={{ display: 'flex', gap: 'var(--space-sm)', marginTop: 'var(--space-sm)' }}>
+            <Button
+              variant="primary"
+              icon={PlayCircle}
+              onClick={() => navigate(`/plans/${selectedPlan.id}/session`)}
+              style={{ flex: 1 }}
+            >
+              Start Workout
+            </Button>
+            <Button
+              variant="secondary"
+              icon={Zap}
+              onClick={() => navigate('/free-workout')}
+              style={{ flex: 1 }}
+            >
+              Free Workout
+            </Button>
+          </div>
         </>
       ) : (
-        <EmptyState message="No plans yet — create one to get started." actionLabel="Create a plan" onAction={() => navigate('/plans/new')} />
+        <>
+          <EmptyState message="No plans yet — create one to get started." actionLabel="Create a plan" onAction={() => navigate('/plans/new')} />
+          <Button
+            variant="secondary"
+            icon={Zap}
+            onClick={() => navigate('/free-workout')}
+            style={{ width: '100%', marginTop: 'var(--space-sm)' }}
+          >
+            Start Free Workout
+          </Button>
+        </>
       )}
     </Card>
   );

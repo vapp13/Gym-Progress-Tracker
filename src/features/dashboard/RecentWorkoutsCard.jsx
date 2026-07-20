@@ -30,12 +30,18 @@ function RecentWorkoutsCard() {
         </div>
       ) : (
         <ul style={{ listStyle: 'none', margin: '12px 0 0 0', padding: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {recent.map((s) => (
-            <li key={s.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-sm)' }}>
-              <span>{formatDate(s.completedAt)}</span>
-              <span style={{ color: 'var(--color-text-muted)' }}>{s.exercises.length} exercises</span>
-            </li>
-          ))}
+          {recent.map((s) => {
+            const date = formatDate(s.completedAt);
+            return (
+              <li key={s.id} style={{ display: 'flex', flexDirection: 'column', fontSize: 'var(--text-sm)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ fontWeight: 600 }}>{s.planName || date}</span>
+                  <span style={{ color: 'var(--color-text-muted)' }}>{s.exercises.length} exercises</span>
+                </div>
+                {s.planName && <span style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-faint)' }}>{date}</span>}
+              </li>
+            );
+          })}
         </ul>
       )}
     </Card>

@@ -75,6 +75,14 @@ function App() {
             }
           />
           <Route
+            path="/free-workout"
+            element={
+              <ProtectedRoute>
+                <WorkoutSession />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/history"
             element={
               <ProtectedRoute>

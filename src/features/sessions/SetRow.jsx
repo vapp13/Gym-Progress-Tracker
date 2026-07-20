@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Trash2 } from 'lucide-react';
 import './SetRow.css';
 
 const SET_TYPES = [
@@ -18,7 +18,7 @@ const TYPE_BADGE = {
   assisted: 'A',
 };
 
-function SetRow({ setNumber, set, onChange }) {
+function SetRow({ setNumber, set, onChange, onRemove, canRemove }) {
   const [expanded, setExpanded] = useState(false);
 
   const handleField = (field, value) => {
@@ -81,40 +81,54 @@ function SetRow({ setNumber, set, onChange }) {
 
       {expanded && (
         <div className="set-row-details">
-          <label className="set-row-field">
-            <span>Type</span>
-            <select
-              value={set.type || 'working'}
-              onChange={(e) => handleField('type', e.target.value)}
+          <div className="set-row-details-fields">
+            <label className="set-row-field">
+              <span>Type</span>
+              <select
+                value={set.type || 'working'}
+                onChange={(e) => handleField('type', e.target.value)}
+              >
+                {SET_TYPES.map((t) => (
+                  <option key={t.value} value={t.value}>{t.label}</option>
+                ))}
+              </select>
+            </label>
+
+            <label className="set-row-field">
+              <span>RPE</span>
+              <input
+                type="number"
+                min="1"
+                max="10"
+                step="0.5"
+                placeholder="—"
+                value={set.rpe ?? ''}
+                onChange={(e) => handleField('rpe', e.target.value === '' ? null : Number(e.target.value))}
+              />
+            </label>
+
+            <label className="set-row-field set-row-notes">
+              <span>Notes</span>
+              <input
+                type="text"
+                placeholder="Optional"
+                value={set.notes || ''}
+                onChange={(e) => handleField('notes', e.target.value)}
+              />
+            </label>
+          </div>
+
+          {canRemove && (
+            <button
+              type="button"
+              className="set-row-remove"
+              onClick={onRemove}
+              aria-label={`Remove set ${setNumber}`}
             >
-              {SET_TYPES.map((t) => (
-                <option key={t.value} value={t.value}>{t.label}</option>
-              ))}
-            </select>
-          </label>
-
-          <label className="set-row-field">
-            <span>RPE</span>
-            <input
-              type="number"
-              min="1"
-              max="10"
-              step="0.5"
-              placeholder="—"
-              value={set.rpe ?? ''}
-              onChange={(e) => handleField('rpe', e.target.value === '' ? null : Number(e.target.value))}
-            />
-          </label>
-
-          <label className="set-row-field set-row-notes">
-            <span>Notes</span>
-            <input
-              type="text"
-              placeholder="Optional"
-              value={set.notes || ''}
-              onChange={(e) => handleField('notes', e.target.value)}
-            />
-          </label>
+              <Trash2 size={14} />
+              Remove Set
+            </button>
+          )}
         </div>
       )}
     </div>

@@ -62,7 +62,7 @@ function WorkoutPlanEditor() {
         entryId: generateEntryId(),
         exerciseId: exercise.id,
         exerciseName: exercise.name,
-        targetSets: 3,
+        targetSets: 1,
         targetReps: 10,
         targetWeight: 0,
         restSeconds: 60,

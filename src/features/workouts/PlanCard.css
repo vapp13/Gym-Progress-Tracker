@@ -29,6 +29,7 @@
   cursor: pointer;
   min-height: 44px;
   font-family: var(--font-body);
+  color: var(--color-text);
 }
 
 .plan-card-main-button:focus-visible {

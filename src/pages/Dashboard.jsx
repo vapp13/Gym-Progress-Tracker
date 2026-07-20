@@ -13,22 +13,26 @@ function Dashboard() {
     <div className="page-container">
       <WelcomeCard />
 
-      <div className="card-grid card-grid-2" style={{ marginBottom: 'var(--space-md)' }}>
+      {/* Row 1 — full width */}
+      <div style={{ marginBottom: 'var(--space-md)' }}>
         <TodaysWorkoutCard />
+      </div>
+
+      {/* Row 2 */}
+      <div className="card-grid card-grid-2" style={{ marginBottom: 'var(--space-md)' }}>
         <CurrentGoalCard />
-      </div>
-
-      <div className="card-grid card-grid-2" style={{ marginBottom: 'var(--space-md)' }}>
         <WeeklyProgressCard />
-        <StreakCard />
       </div>
 
+      {/* Row 3 */}
       <div className="card-grid card-grid-2" style={{ marginBottom: 'var(--space-md)' }}>
-        <RecentWorkoutsCard />
+        <StreakCard />
         <PersonalRecordsCard />
       </div>
 
-      <div style={{ marginBottom: 'var(--space-md)' }}>
+      {/* Row 4 */}
+      <div className="card-grid card-grid-2" style={{ marginBottom: 'var(--space-md)' }}>
+        <RecentWorkoutsCard />
         <BodyMetricsCard />
       </div>
 

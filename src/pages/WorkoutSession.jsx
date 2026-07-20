@@ -5,9 +5,13 @@ import { useAuth } from '../context/AuthContext';
 import { useWorkoutPlans } from '../hooks/useWorkoutPlans';
 import { useWorkoutSessions } from '../hooks/useWorkoutSessions';
 import { getExercisePerformanceBatch, getExercisePerformance } from '../services/exercisePerformance.service';
+import { sessionRoute } from '../utils/sessionRoute';
 import SessionExerciseCard from '../features/sessions/SessionExerciseCard';
 import ExercisePicker from '../features/workouts/ExercisePicker';
 import Button from '../components/Button';
+import ConfirmModal from '../components/ConfirmModal';
+import SessionTimer from '../components/SessionTimer';
+import EmptyState from '../components/EmptyState';
 import { SkeletonCard } from '../components/Skeleton';
 
 function buildInitialExercises(plan) {
@@ -38,7 +42,7 @@ function buildExtraExercise(exercise) {
     supersetGroupId: null,
     planNotes: '',
     addedExtra: true,
-    sets: Array.from({ length: 3 }, () => ({
+    sets: Array.from({ length: 1 }, () => ({
       reps: 10,
       weight: 0,
       type: 'working',
@@ -54,41 +58,54 @@ const AUTOSAVE_DELAY_MS = 1200;
 
 function WorkoutSession() {
   const { planId } = useParams();
+  const isFreeMode = !planId;
   const navigate = useNavigate();
   const { user } = useAuth();
   const { plans, loading: plansLoading } = useWorkoutPlans();
   const { start, saveProgress, complete, pause, resume, discard, findActiveSession } = useWorkoutSessions();
 
   const [sessionId, setSessionId] = useState(null);
+  const [sessionStartedAt, setSessionStartedAt] = useState(null);
+  const [planName, setPlanName] = useState(null);
   const [exercises, setExercises] = useState([]);
   const [notes, setNotes] = useState('');
   const [previousPerformance, setPreviousPerformance] = useState({});
   const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [isDiscardOpen, setIsDiscardOpen] = useState(false);
   const hasInitialized = useRef(false);
   const skipNextAutosave = useRef(true);
   const autosaveTimer = useRef(null);
 
   useEffect(() => {
     async function initSession() {
-      if (plansLoading || hasInitialized.current) return;
-      const plan = plans.find((p) => p.id === planId);
-      if (!plan) return;
+      if (!isFreeMode && plansLoading) return;
+      if (hasInitialized.current) return;
+
+      const plan = isFreeMode ? null : plans.find((p) => p.id === planId);
+      if (!isFreeMode && !plan) return;
 
       hasInitialized.current = true;
 
       const existingActive = await findActiveSession();
+      const matchesThisRoute = existingActive
+        ? (isFreeMode ? !existingActive.planId : existingActive.planId === planId)
+        : false;
 
       let activeSessionId;
       let activeExercises;
       let activeNotes = '';
+      let activeStartedAt;
+      let activePlanName = isFreeMode ? 'Free Workout' : plan.name;
 
-      if (existingActive && existingActive.planId === planId) {
+      if (existingActive && matchesThisRoute) {
         // Resume this exact workout in place.
         activeSessionId = existingActive.id;
         activeExercises = existingActive.exercises.length > 0
           ? existingActive.exercises
-          : buildInitialExercises(plan);
+          : (isFreeMode ? [] : buildInitialExercises(plan));
         activeNotes = existingActive.notes || '';
+        activeStartedAt = existingActive.startedAt;
+        activePlanName = existingActive.planName || activePlanName;
         if (existingActive.status === 'paused') {
           await resume(activeSessionId);
         }
@@ -99,32 +116,37 @@ function WorkoutSession() {
           "You have another workout already in progress. Resume that one instead?"
         );
         if (shouldResumeOther) {
-          navigate(`/plans/${existingActive.planId}/session`, { replace: true });
+          navigate(sessionRoute(existingActive), { replace: true });
         } else {
           navigate('/plans', { replace: true });
         }
         return;
       } else {
-        activeSessionId = await start(planId, plan.name);
-        activeExercises = buildInitialExercises(plan);
+        activeSessionId = await start(isFreeMode ? null : planId, activePlanName);
+        activeExercises = isFreeMode ? [] : buildInitialExercises(plan);
+        activeStartedAt = { toDate: () => new Date() };
       }
 
       const exerciseIds = activeExercises.map((ex) => ex.exerciseId);
-      const performance = await getExercisePerformanceBatch(user.uid, exerciseIds);
+      const performance = exerciseIds.length > 0
+        ? await getExercisePerformanceBatch(user.uid, exerciseIds)
+        : {};
 
       skipNextAutosave.current = true;
       setSessionId(activeSessionId);
+      setSessionStartedAt(activeStartedAt);
+      setPlanName(activePlanName);
       setExercises(activeExercises);
       setNotes(activeNotes);
       setPreviousPerformance(performance);
     }
     initSession();
-  }, [plansLoading, plans, planId, start, resume, findActiveSession, user, navigate]);
+  }, [isFreeMode, plansLoading, plans, planId, start, resume, findActiveSession, user, navigate]);
 
   // Continuously (debounced) saves progress to Firestore as the user logs
   // sets, so closing/reopening the app resumes exactly where they left off.
   useEffect(() => {
-    if (!sessionId || exercises.length === 0) return;
+    if (!sessionId) return;
 
     if (skipNextAutosave.current) {
       skipNextAutosave.current = false;
@@ -176,14 +198,13 @@ function WorkoutSession() {
     navigate('/plans');
   };
 
-  const handleDiscard = async () => {
-    if (!window.confirm('Discard this workout? Logged sets will not be saved to your history.')) return;
+  const handleConfirmDiscard = async () => {
     if (autosaveTimer.current) clearTimeout(autosaveTimer.current);
     await discard(sessionId);
     navigate('/plans');
   };
 
-  if (plansLoading || exercises.length === 0) {
+  if ((!isFreeMode && plansLoading) || !sessionId) {
     return (
       <div className="page-container" aria-live="polite">
         <SkeletonCard />
@@ -195,44 +216,51 @@ function WorkoutSession() {
   return (
     <div className="page-container">
       <div className="page-header">
-        <h1>Workout in Progress</h1>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <h1>{isFreeMode ? 'Free Workout' : planName}</h1>
+          <SessionTimer startedAt={sessionStartedAt} />
+        </div>
         <div style={{ display: 'flex', gap: 'var(--space-xs)' }}>
           <button className="session-icon-btn" onClick={handlePause} aria-label="Pause workout">
             <Pause size={18} />
           </button>
-          <button className="session-icon-btn session-icon-btn-danger" onClick={handleDiscard} aria-label="Discard workout">
+          <button className="session-icon-btn session-icon-btn-danger" onClick={() => setIsDiscardOpen(true)} aria-label="Discard workout">
             <XCircle size={18} />
           </button>
         </div>
       </div>
 
-      {exercises.map((exercise, index) => {
-        const previous = exercises[index - 1];
-        const isLinkedToPrevious = Boolean(
-          previous && exercise.supersetGroupId && exercise.supersetGroupId === previous.supersetGroupId
-        );
-        return (
-          <div
-            key={`${exercise.exerciseId}-${index}`}
-            className={isLinkedToPrevious ? 'session-superset-linked' : undefined}
-          >
-            {exercise.supersetGroupId && !isLinkedToPrevious && (
-              <p className="session-superset-label">Superset</p>
-            )}
-            {exercise.addedExtra && (
-              <p className="session-superset-label" style={{ color: 'var(--color-primary)' }}>Added</p>
-            )}
-            {exercise.planNotes && (
-              <p className="session-exercise-plan-notes">{exercise.planNotes}</p>
-            )}
-            <SessionExerciseCard
-              exercise={exercise}
-              previous={previousPerformance[exercise.exerciseId]}
-              onChange={(updated) => handleExerciseChange(index, updated)}
-            />
-          </div>
-        );
-      })}
+      {exercises.length === 0 ? (
+        <EmptyState message="Add your first exercise to get started." />
+      ) : (
+        exercises.map((exercise, index) => {
+          const previous = exercises[index - 1];
+          const isLinkedToPrevious = Boolean(
+            previous && exercise.supersetGroupId && exercise.supersetGroupId === previous.supersetGroupId
+          );
+          return (
+            <div
+              key={`${exercise.exerciseId}-${index}`}
+              className={isLinkedToPrevious ? 'session-superset-linked' : undefined}
+            >
+              {exercise.supersetGroupId && !isLinkedToPrevious && (
+                <p className="session-superset-label">Superset</p>
+              )}
+              {exercise.addedExtra && (
+                <p className="session-superset-label" style={{ color: 'var(--color-primary)' }}>Added</p>
+              )}
+              {exercise.planNotes && (
+                <p className="session-exercise-plan-notes">{exercise.planNotes}</p>
+              )}
+              <SessionExerciseCard
+                exercise={exercise}
+                previous={previousPerformance[exercise.exerciseId]}
+                onChange={(updated) => handleExerciseChange(index, updated)}
+              />
+            </div>
+          );
+        })
+      )}
 
       <Button
         variant="secondary"
@@ -253,7 +281,13 @@ function WorkoutSession() {
         />
       </label>
 
-      <Button variant="primary" icon={CheckCircle} onClick={handleFinish} style={{ width: '100%' }}>
+      <Button
+        variant="primary"
+        icon={CheckCircle}
+        onClick={handleFinish}
+        disabled={exercises.length === 0}
+        style={{ width: '100%' }}
+      >
         Finish Workout
       </Button>
 
@@ -261,6 +295,15 @@ function WorkoutSession() {
         isOpen={isPickerOpen}
         onClose={() => setIsPickerOpen(false)}
         onSelect={handleAddExtraExercise}
+      />
+
+      <ConfirmModal
+        isOpen={isDiscardOpen}
+        onClose={() => setIsDiscardOpen(false)}
+        onConfirm={handleConfirmDiscard}
+        title="Discard Workout"
+        message="Discard this workout? Logged sets will not be saved to your history."
+        confirmLabel="Discard"
       />
     </div>
   );
