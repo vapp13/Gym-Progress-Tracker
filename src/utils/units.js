@@ -33,3 +33,16 @@ export function formatWeight(kg, unit) {
   if (kg === null || kg === undefined) return '—';
   return unit === 'imperial' ? `${kgToLb(kg)} lb` : `${kg} kg`;
 }
+
+// Plain linear cm<->inches conversion for circumference measurements
+// (waist, chest, biceps, etc.) — distinct from cmToFeetInches, which is
+// only for the height field's feet'inches" display format.
+export function cmToInches(cm) {
+  if (cm === null || cm === undefined) return null;
+  return Math.round((cm / 2.54) * 10) / 10;
+}
+
+export function inchesToCm(inches) {
+  if (inches === null || inches === undefined) return null;
+  return Math.round(inches * 2.54 * 10) / 10;
+}

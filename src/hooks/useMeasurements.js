@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import {
   addMeasurement,
   getMeasurements,
+  updateMeasurement,
   deleteMeasurement,
 } from '../services/measurements.service';
 
@@ -35,10 +36,15 @@ export function useMeasurements() {
     await fetchMeasurements();
   };
 
+  const editEntry = async (entryId, updates) => {
+    await updateMeasurement(user.uid, entryId, updates);
+    await fetchMeasurements();
+  };
+
   const removeEntry = async (entryId) => {
     await deleteMeasurement(user.uid, entryId);
     await fetchMeasurements();
   };
 
-  return { measurements, loading, error, addEntry, removeEntry, refetch: fetchMeasurements };
+  return { measurements, loading, error, addEntry, editEntry, removeEntry, refetch: fetchMeasurements };
 }

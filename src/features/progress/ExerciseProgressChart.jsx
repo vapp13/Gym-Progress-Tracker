@@ -1,6 +1,7 @@
 import EmptyState from '../../components/EmptyState';
 import Card from '../../components/Card';
 import TrendLineChart from '../../components/TrendLineChart';
+import Tooltip from '../../components/Tooltip';
 
 function ExerciseProgressChart({ logs, exerciseId }) {
   if (!exerciseId) {
@@ -25,7 +26,11 @@ function ExerciseProgressChart({ logs, exerciseId }) {
 
   return (
     <Card>
-      <TrendLineChart data={chartData} dataKey="volume" color="var(--color-primary)" />
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 'var(--space-sm)' }}>
+        <span className="card-eyebrow">Training Volume</span>
+        <Tooltip text="Training Volume = Weight × Reps × Sets — a single number representing the total work done for this exercise in a session." />
+      </div>
+      <TrendLineChart data={chartData} dataKey="volume" name="Training Volume" color="var(--color-primary)" />
     </Card>
   );
 }

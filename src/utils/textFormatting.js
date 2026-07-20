@@ -34,3 +34,12 @@ export function toTitleCase(str) {
   if (!str) return str;
   return str.replace(/(^|[\s-])\S/g, (match) => match.toUpperCase());
 }
+
+// Short chart-axis date format, e.g. "2026-06-26" -> "Jun 26". Falls back
+// to the original string if it isn't a parseable date.
+export function formatShortDate(dateString) {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return dateString;
+  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}

@@ -8,8 +8,9 @@ import {
   ReferenceLine,
   ResponsiveContainer,
 } from 'recharts';
+import { formatShortDate } from '../utils/textFormatting';
 
-function TrendLineChart({ data, dataKey, color = 'var(--color-primary)', height = 200, referenceValue, referenceLabel }) {
+function TrendLineChart({ data, dataKey, name, color = 'var(--color-primary)', height = 200, referenceValue, referenceLabel }) {
   let domain;
   if (referenceValue !== undefined && referenceValue !== null) {
     const values = data.map((d) => d[dataKey]).filter((v) => typeof v === 'number');
@@ -24,7 +25,14 @@ function TrendLineChart({ data, dataKey, color = 'var(--color-primary)', height 
     <ResponsiveContainer width="100%" height={height}>
       <LineChart data={data}>
         <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" vertical={false} />
-        <XAxis dataKey="date" stroke="var(--color-text-muted)" fontSize={11} tickLine={false} axisLine={false} />
+        <XAxis
+          dataKey="date"
+          stroke="var(--color-text-muted)"
+          fontSize={11}
+          tickLine={false}
+          axisLine={false}
+          tickFormatter={formatShortDate}
+        />
         <YAxis
           stroke="var(--color-text-muted)"
           fontSize={11}
@@ -34,6 +42,7 @@ function TrendLineChart({ data, dataKey, color = 'var(--color-primary)', height 
           domain={domain}
         />
         <Tooltip
+          labelFormatter={formatShortDate}
           contentStyle={{
             backgroundColor: 'var(--color-bg-elevated)',
             border: '1px solid var(--color-border)',
@@ -53,6 +62,7 @@ function TrendLineChart({ data, dataKey, color = 'var(--color-primary)', height 
         <Line
           type="monotone"
           dataKey={dataKey}
+          name={name || dataKey}
           stroke={color}
           strokeWidth={2.5}
           dot={{ fill: color, r: 3 }}
