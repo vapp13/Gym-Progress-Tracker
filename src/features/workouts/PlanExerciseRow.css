@@ -39,7 +39,7 @@
 
 .plan-exercise-row-fields {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-sm);
 }
 
@@ -49,6 +49,7 @@
   gap: 4px;
   font-size: var(--text-xs);
   color: var(--color-text-muted);
+  min-width: 0;
 }
 
 .plan-exercise-row-fields input {
@@ -60,6 +61,8 @@
   border-radius: var(--radius-md);
   padding: var(--space-xs) var(--space-sm);
   min-height: 40px;
+  width: 100%;
+  min-width: 0;
   box-sizing: border-box;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
@@ -68,6 +71,43 @@
   outline: none;
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px var(--color-primary-soft);
+}
+
+.plan-exercise-row-rest {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.plan-exercise-row-rest input,
+.plan-exercise-row-rest select {
+  font-size: var(--text-sm);
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-xs) 2px;
+  min-height: 40px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.plan-exercise-row-rest input:focus-visible,
+.plan-exercise-row-rest select:focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-soft);
+}
+
+.plan-exercise-row-rest-unit {
+  font-size: 0.65rem;
+  color: var(--color-text-faint);
+  white-space: nowrap;
 }
 
 .plan-exercise-row-notes {

@@ -1,7 +1,14 @@
 import FilterChip from '../../components/FilterChip';
+import { toTitleCase } from '../../utils/textFormatting';
 import './PlanMetaForm.css';
 
-const GOALS = ['strength', 'hypertrophy', 'endurance', 'weight-loss', 'general'];
+const GOALS = [
+  { value: 'strength', label: 'Strength' },
+  { value: 'hypertrophy', label: 'Hypertrophy' },
+  { value: 'endurance', label: 'Endurance' },
+  { value: 'weight-loss', label: 'Weight Loss' },
+  { value: 'general', label: 'General' },
+];
 const EXPERIENCE_LEVELS = ['beginner', 'intermediate', 'advanced'];
 const DAYS = [
   { value: 'mon', label: 'Mon' },
@@ -45,7 +52,7 @@ function PlanMetaForm({ meta, onChange }) {
           onChange={(e) => handleField('goal', e.target.value)}
         >
           {GOALS.map((goal) => (
-            <option key={goal} value={goal}>{goal}</option>
+            <option key={goal.value} value={goal.value}>{goal.label}</option>
           ))}
         </select>
       </label>
@@ -79,7 +86,7 @@ function PlanMetaForm({ meta, onChange }) {
           onChange={(e) => handleField('experienceLevel', e.target.value)}
         >
           {EXPERIENCE_LEVELS.map((level) => (
-            <option key={level} value={level}>{level}</option>
+            <option key={level} value={level}>{toTitleCase(level)}</option>
           ))}
         </select>
       </label>

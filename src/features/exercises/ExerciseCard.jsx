@@ -1,17 +1,23 @@
-import { Dumbbell } from 'lucide-react';
+import { Dumbbell, Check } from 'lucide-react';
 import { normalizeDifficulty } from '../../utils/difficulty';
 import './ExerciseCard.css';
 
-function ExerciseCard({ exercise, onClick }) {
+function ExerciseCard({ exercise, onClick, selectable, selected }) {
   const difficulty = normalizeDifficulty(exercise.difficulty);
 
   return (
-    <button className="exercise-card" onClick={onClick}>
-      <span className="exercise-card-icon"><Dumbbell size={18} /></span>
+    <button className={`exercise-card ${selected ? 'is-selected' : ''}`} onClick={onClick}>
+      {selectable ? (
+        <span className={`exercise-card-checkbox ${selected ? 'is-checked' : ''}`}>
+          {selected && <Check size={14} />}
+        </span>
+      ) : (
+        <span className="exercise-card-icon"><Dumbbell size={18} /></span>
+      )}
       <div className="exercise-card-main">
         <h3>{exercise.name}</h3>
         <p className="exercise-card-meta">
-          {exercise.muscleGroup} · {exercise.equipment}
+          {exercise.muscleGroup} · {exercise.equipmentCategory || exercise.equipment}
         </p>
       </div>
       {difficulty && (

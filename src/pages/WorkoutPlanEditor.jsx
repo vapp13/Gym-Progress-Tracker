@@ -55,21 +55,21 @@ function WorkoutPlanEditor() {
     }
   }, [isEditMode, loading, plans, id]);
 
-  const handleAddExercise = (exercise) => {
+  const handleAddExercises = (newExercises) => {
     setExercises((prev) => [
       ...prev,
-      {
+      ...newExercises.map((exercise, i) => ({
         entryId: generateEntryId(),
         exerciseId: exercise.id,
         exerciseName: exercise.name,
-        targetSets: 1,
-        targetReps: 10,
-        targetWeight: 0,
+        targetSets: '',
+        targetReps: '',
+        targetWeight: '',
         restSeconds: 60,
         supersetGroupId: null,
         notes: '',
-        order: prev.length,
-      },
+        order: prev.length + i,
+      })),
     ]);
   };
 
@@ -115,6 +115,13 @@ function WorkoutPlanEditor() {
     navigate('/plans');
   };
 
+  // Sets/Reps/Weight start empty for a faster mobile entry experience, but
+  // shouldn't be savable empty — 0 is a valid weight (bodyweight exercises),
+  // so we only check for the empty-string "unset" state, not falsy values.
+  const hasIncompleteExercise = exercises.some(
+    (ex) => ex.targetSets === '' || ex.targetReps === '' || ex.targetWeight === ''
+  );
+
   if (isEditMode && loading) return <p aria-live="polite" style={{ padding: 24 }}>Loading plan...</p>;
 
   return (
@@ -152,7 +159,7 @@ function WorkoutPlanEditor() {
         <Button variant="secondary" onClick={() => navigate('/plans')} style={{ flex: 1 }}>
           Cancel
         </Button>
-        <Button variant="primary" icon={Save} onClick={handleSave} disabled={!meta.name} style={{ flex: 1 }}>
+        <Button variant="primary" icon={Save} onClick={handleSave} disabled={!meta.name || hasIncompleteExercise} style={{ flex: 1 }}>
           Save Plan
         </Button>
       </div>
@@ -160,7 +167,7 @@ function WorkoutPlanEditor() {
       <ExercisePicker
         isOpen={isPickerOpen}
         onClose={() => setIsPickerOpen(false)}
-        onSelect={handleAddExercise}
+        onConfirm={handleAddExercises}
       />
     </div>
   );

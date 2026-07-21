@@ -167,16 +167,23 @@ function WorkoutSession() {
     );
   };
 
-  const handleAddExtraExercise = async (exercise) => {
-    setExercises((prev) => [...prev, buildExtraExercise(exercise)]);
-    // Fetch previous-performance for this exercise too, same as the
-    // plan-provided ones, so the "Previous: ..." prompt still works.
-    if (!previousPerformance[exercise.id]) {
-      const performance = await getExercisePerformance(user.uid, exercise.id);
-      if (performance) {
-        setPreviousPerformance((prev) => ({ ...prev, [exercise.id]: performance }));
-      }
-    }
+  const handleAddExtraExercises = async (newExercises) => {
+    setExercises((prev) => [...prev, ...newExercises.map(buildExtraExercise)]);
+    // Fetch previous-performance for these too, same as the plan-provided
+    // ones, so the "Previous: ..." prompt still works.
+    const toFetch = newExercises.filter((ex) => !previousPerformance[ex.id]);
+    if (toFetch.length === 0) return;
+
+    const results = await Promise.all(
+      toFetch.map((ex) => getExercisePerformance(user.uid, ex.id))
+    );
+    setPreviousPerformance((prev) => {
+      const updated = { ...prev };
+      toFetch.forEach((ex, i) => {
+        if (results[i]) updated[ex.id] = results[i];
+      });
+      return updated;
+    });
   };
 
   const flushPendingSave = async () => {
@@ -294,7 +301,7 @@ function WorkoutSession() {
       <ExercisePicker
         isOpen={isPickerOpen}
         onClose={() => setIsPickerOpen(false)}
-        onSelect={handleAddExtraExercise}
+        onConfirm={handleAddExtraExercises}
       />
 
       <ConfirmModal

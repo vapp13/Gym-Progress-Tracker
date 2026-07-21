@@ -41,6 +41,29 @@
   flex-shrink: 0;
 }
 
+.exercise-card.is-selected {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+}
+
+.exercise-card-checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #fff;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.exercise-card-checkbox.is-checked {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
 .exercise-card-main {
   flex: 1;
   min-width: 0;

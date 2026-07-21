@@ -1,0 +1,14 @@
+.exercise-browser {
+  position: relative;
+}
+
+.exercise-browser-list-with-bar {
+  padding-bottom: 72px;
+}
+
+.exercise-browser-confirm-bar {
+  position: sticky;
+  bottom: var(--space-sm);
+  padding-top: var(--space-sm);
+  z-index: 20;
+}
