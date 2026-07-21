@@ -1,0 +1,123 @@
+.measurement-form-row {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.measurement-form-row .form-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.measurement-form-section {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-sm);
+}
+
+.measurement-form-expand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  padding: var(--space-xs) 0;
+  min-height: 40px;
+  text-align: left;
+}
+
+.measurement-form-expand svg {
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.measurement-form-expand svg.is-open {
+  transform: rotate(180deg);
+}
+
+.measurement-form-section-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  animation: fade-in 0.15s ease;
+  padding-top: var(--space-sm);
+}
+
+.measurement-form-section-hint {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
+
+.measurement-form-calculated {
+  background-color: var(--color-surface-hover);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.measurement-form-calculated-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.measurement-form-calculated-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.measurement-form-calculated-sublabel {
+  font-family: var(--font-body);
+  font-weight: 400;
+  color: var(--color-text-muted);
+  text-transform: capitalize;
+}
+
+.measurement-form-calculated-note {
+  margin: 4px 0 0 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
+
+.measurement-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-sm) var(--space-md);
+}
+
+.measurement-form-grid .form-field {
+  min-width: 0;
+}
+
+.measurement-form-grid .form-field input {
+  min-width: 0;
+  width: 100%;
+}
+
+.measurement-form-grid .form-field span {
+  display: flex;
+  align-items: center;
+}
+
+/* One field per row on small phones, per requirement — matches the
+   breakpoint already used elsewhere in the app for compact layouts. */
+@media (max-width: 380px) {
+  .measurement-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .measurement-form-row {
+    flex-direction: column;
+  }
+}

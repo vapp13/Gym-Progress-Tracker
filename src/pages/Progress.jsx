@@ -152,6 +152,7 @@ function Progress() {
           onSave={handleSaveMeasurement}
           onCancel={() => setIsModalOpen(false)}
           units={units}
+          profile={profile}
         />
       </Modal>
 

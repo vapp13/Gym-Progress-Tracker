@@ -309,41 +309,6 @@ a {
   background-color: var(--color-danger-soft);
 }
 
-.measurement-form-expand {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: none;
-  border: none;
-  color: var(--color-primary);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  cursor: pointer;
-  padding: 4px 0;
-  min-height: 32px;
-}
-
-.measurement-form-expand svg {
-  transition: transform 0.2s ease;
-}
-
-.measurement-form-expand svg.is-open {
-  transform: rotate(180deg);
-}
-
-.measurement-form-extra {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  animation: fade-in 0.15s ease;
-}
-
-.measurement-form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-sm);
-}
-
 .section-title {
   font-family: var(--font-display);
   font-size: var(--text-lg);

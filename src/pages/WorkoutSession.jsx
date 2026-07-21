@@ -26,7 +26,6 @@ function buildInitialExercises(plan) {
       reps: planEx.targetReps,
       weight: planEx.targetWeight,
       type: 'working',
-      rpe: null,
       notes: '',
       completed: false,
       completedAt: null,
@@ -43,10 +42,9 @@ function buildExtraExercise(exercise) {
     planNotes: '',
     addedExtra: true,
     sets: Array.from({ length: 1 }, () => ({
-      reps: 10,
-      weight: 0,
+      reps: '',
+      weight: '',
       type: 'working',
-      rpe: null,
       notes: '',
       completed: false,
       completedAt: null,
@@ -252,9 +250,6 @@ function WorkoutSession() {
             >
               {exercise.supersetGroupId && !isLinkedToPrevious && (
                 <p className="session-superset-label">Superset</p>
-              )}
-              {exercise.addedExtra && (
-                <p className="session-superset-label" style={{ color: 'var(--color-primary)' }}>Added</p>
               )}
               {exercise.planNotes && (
                 <p className="session-exercise-plan-notes">{exercise.planNotes}</p>

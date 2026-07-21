@@ -28,10 +28,9 @@ function SessionExerciseCard({ exercise, previous, onChange }) {
   const handleAddSet = () => {
     const lastSet = exercise.sets[exercise.sets.length - 1];
     const newSet = {
-      reps: lastSet?.reps ?? 10,
-      weight: lastSet?.weight ?? 0,
+      reps: lastSet?.reps ?? '',
+      weight: lastSet?.weight ?? '',
       type: 'working',
-      rpe: null,
       notes: '',
       completed: false,
       completedAt: null,
