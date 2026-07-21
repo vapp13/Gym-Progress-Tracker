@@ -55,14 +55,16 @@ function ExerciseHistory() {
         <EmptyState message="No sessions logged for this exercise yet." icon={Dumbbell} />
       ) : (
         <>
-          <div className="stat-box-grid">
-            <StatBox label="Sessions" value={exerciseLogs.length} />
-            <StatBox label="Best Weight" value={record?.heaviestWeight ?? '—'} unit="kg" />
-            <StatBox label="Best Reps" value={record?.bestReps ?? '—'} />
-            <StatBox label="Est. 1RM" value={record?.bestEstimated1RM ?? '—'} unit="kg" />
-            <StatBox label="Total Volume" value={Math.round(totalVolume).toLocaleString()} unit="kg" />
-            <StatBox label="Best Session Vol." value={record?.bestSessionVolume ?? '—'} unit="kg" />
-          </div>
+          <Card>
+            <div className="stat-box-grid" style={{ marginBottom: 0 }}>
+              <StatBox label="Sessions" value={exerciseLogs.length} />
+              <StatBox label="Best Weight" value={record?.heaviestWeight ?? '—'} unit="kg" />
+              <StatBox label="Best Reps" value={record?.bestReps ?? '—'} />
+              <StatBox label="Est. 1RM" value={record?.bestEstimated1RM ?? '—'} unit="kg" />
+              <StatBox label="Total Volume" value={Math.round(totalVolume).toLocaleString()} unit="kg" />
+              <StatBox label="Best Session Vol." value={record?.bestSessionVolume ?? '—'} unit="kg" />
+            </div>
+          </Card>
 
           <div className="section-title">Strength Progression</div>
           {strengthData.length > 0 ? (

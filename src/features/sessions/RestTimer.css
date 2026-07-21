@@ -2,33 +2,33 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, var(--color-accent), #e0941a);
+  background-color: var(--color-accent);
   color: #1a1208;
   border-radius: var(--radius-md);
-  padding: var(--space-sm) var(--space-md);
+  padding: 10px var(--space-md);
   margin-bottom: var(--space-sm);
-  box-shadow: 0 4px 16px var(--color-accent-soft);
   animation: fade-in 0.2s ease;
 }
 
 .rest-timer-label {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
 }
 
 .rest-timer-clock {
   font-family: var(--font-display);
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
 .rest-timer-skip {
-  background: rgba(26, 18, 8, 0.15);
-  border: 1px solid rgba(26, 18, 8, 0.3);
+  background: rgba(26, 18, 8, 0.12);
+  border: none;
   border-radius: var(--radius-full);
   color: #1a1208;
   padding: 6px 14px;

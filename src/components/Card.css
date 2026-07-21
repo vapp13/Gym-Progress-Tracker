@@ -17,7 +17,7 @@
 
 @media (hover: hover) {
   .card-interactive:hover {
-    transform: translateY(-2px);
+    transform: translateY(-1px);
     box-shadow: var(--shadow-md);
     border-color: var(--color-border-strong);
   }

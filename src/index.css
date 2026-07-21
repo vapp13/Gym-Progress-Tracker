@@ -135,18 +135,16 @@ a {
 .stat-box-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-sm);
+  gap: var(--space-lg) var(--space-md);
   margin-bottom: var(--space-lg);
 }
 
 .stat-box {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-md);
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
+  padding-left: var(--space-sm);
+  border-left: 2px solid var(--color-border);
 }
 
 .stat-box-value {
@@ -154,6 +152,7 @@ a {
   font-size: var(--text-xl);
   font-weight: 700;
   color: var(--color-text);
+  line-height: 1.1;
 }
 
 .stat-box-unit {

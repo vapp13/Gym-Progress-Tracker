@@ -33,11 +33,11 @@
 .btn-primary {
   background-color: var(--color-primary);
   color: #fff;
-  box-shadow: 0 4px 16px var(--color-primary-glow);
 }
 
 .btn-primary:hover {
   background-color: var(--color-primary-hover);
+  box-shadow: 0 4px 14px var(--color-primary-glow);
 }
 
 .btn-secondary {

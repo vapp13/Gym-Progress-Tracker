@@ -2,12 +2,13 @@
   border-radius: var(--radius-md);
   background-color: var(--color-bg);
   margin-bottom: var(--space-xs);
-  transition: background-color 0.2s ease;
+  border-left: 2px solid transparent;
+  transition: border-color 0.2s ease;
   overflow: hidden;
 }
 
 .set-row-completed {
-  background-color: var(--color-success-soft);
+  border-left-color: var(--color-success);
 }
 
 .set-row-main {
