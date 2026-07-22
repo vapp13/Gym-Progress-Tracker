@@ -39,7 +39,7 @@ function ExerciseSelector({ value, onChange, logs }) {
     <>
       <button
         type="button"
-        className="set-row-type-trigger"
+        className="dropdown-trigger-button"
         onClick={() => setIsOpen(true)}
         disabled={availableExercises.length === 0}
       >

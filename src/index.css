@@ -461,3 +461,56 @@ a {
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* ---------- Shared trigger/toggle buttons ----------
+   These are used across multiple, unrelated pages/components (measurement
+   selector, exercise selector, set type picker, history/archive toggles).
+   Kept here in the global stylesheet — loaded on every page regardless of
+   route — rather than in one component's own CSS file, which caused a real
+   bug before: a page using the class without also importing the component
+   that "owned" it would render unstyled until some other page's chunk
+   happened to load the same CSS first. */
+
+.dropdown-trigger-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-sm);
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-xs) var(--space-sm);
+  min-height: 40px;
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
+}
+
+.dropdown-trigger-button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.inline-toggle-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+  min-height: 32px;
+}
+
+.inline-toggle-button svg {
+  transition: transform 0.2s ease;
+}
+
+.inline-toggle-button svg.is-open {
+  transform: rotate(180deg);
+}

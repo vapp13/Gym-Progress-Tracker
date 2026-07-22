@@ -99,7 +99,7 @@ function SetRow({ setNumber, set, onChange, onRemove, canRemove }) {
               <span>Type</span>
               <button
                 type="button"
-                className="set-row-type-trigger"
+                className="dropdown-trigger-button"
                 onClick={() => setIsTypeModalOpen(true)}
               >
                 {typeConfig.color && <span className="set-type-option-dot" style={{ backgroundColor: typeConfig.color }} />}

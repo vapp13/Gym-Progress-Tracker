@@ -81,7 +81,7 @@ function Goals() {
 
       {completedGoals.length > 0 && (
         <>
-          <button className="todays-workout-change" onClick={() => setShowCompleted((prev) => !prev)}>
+          <button className="inline-toggle-button" onClick={() => setShowCompleted((prev) => !prev)}>
             {showCompleted ? 'Hide' : 'Show'} completed goals ({completedGoals.length})
           </button>
           {showCompleted && <div style={{ marginTop: 'var(--space-sm)' }}>{renderGoalList(completedGoals)}</div>}
@@ -90,7 +90,7 @@ function Goals() {
 
       {archivedGoals.length > 0 && (
         <>
-          <button className="todays-workout-change" onClick={() => setShowArchived((prev) => !prev)} style={{ marginTop: 'var(--space-sm)' }}>
+          <button className="inline-toggle-button" onClick={() => setShowArchived((prev) => !prev)} style={{ marginTop: 'var(--space-sm)' }}>
             {showArchived ? 'Hide' : 'Show'} archived goals ({archivedGoals.length})
           </button>
           {showArchived && <div style={{ marginTop: 'var(--space-sm)' }}>{renderGoalList(archivedGoals)}</div>}

@@ -132,7 +132,7 @@ function Progress() {
         <>
           <button
             type="button"
-            className="set-row-type-trigger"
+            className="dropdown-trigger-button"
             onClick={() => setIsMeasurementPickerOpen(true)}
             style={{ marginBottom: 'var(--space-sm)' }}
           >
@@ -150,7 +150,7 @@ function Progress() {
           />
 
           <button
-            className="todays-workout-change"
+            className="inline-toggle-button"
             onClick={() => setShowHistory((prev) => !prev)}
             style={{ marginTop: 'var(--space-sm)' }}
           >

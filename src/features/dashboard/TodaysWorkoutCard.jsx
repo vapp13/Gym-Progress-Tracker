@@ -77,7 +77,7 @@ function TodaysWorkoutCard() {
 
           {hasChoice && (
             <button
-              className="todays-workout-change"
+              className="inline-toggle-button"
               onClick={() => setIsPickerOpen((prev) => !prev)}
             >
               Choose a different workout
