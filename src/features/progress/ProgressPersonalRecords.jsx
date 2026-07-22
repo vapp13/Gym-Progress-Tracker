@@ -3,11 +3,7 @@ import { usePersonalRecords } from '../../hooks/usePersonalRecords';
 import Card from '../../components/Card';
 import EmptyState from '../../components/EmptyState';
 import { SkeletonCard } from '../../components/Skeleton';
-
-function formatDate(dateString) {
-  if (!dateString) return null;
-  return new Date(dateString).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-}
+import PersonalRecordRow from './PersonalRecordRow';
 
 function ProgressPersonalRecords({ limit }) {
   const { records, loading } = usePersonalRecords();
@@ -29,20 +25,7 @@ function ProgressPersonalRecords({ limit }) {
     <Card>
       <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
         {visible.map((r) => (
-          <li key={r.id} style={{ display: 'flex', flexDirection: 'column', gap: 2, paddingBottom: 12, borderBottom: '1px solid var(--color-border)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-sm)', fontWeight: 600 }}>
-              <span>{r.exerciseName}</span>
-              <span style={{ color: 'var(--color-accent)' }}>{r.heaviestWeight}kg</span>
-            </div>
-            <p style={{ margin: 0, fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}>
-              Est. 1RM {r.bestEstimated1RM}kg · Best set {r.bestReps} reps · Best session volume {r.bestSessionVolume}kg
-            </p>
-            {formatDate(r.updatedAt) && (
-              <p style={{ margin: 0, fontSize: 'var(--text-xs)', color: 'var(--color-text-faint)' }}>
-                Achieved {formatDate(r.updatedAt)}
-              </p>
-            )}
-          </li>
+          <PersonalRecordRow key={r.id} record={r} />
         ))}
       </ul>
     </Card>

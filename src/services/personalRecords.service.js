@@ -1,10 +1,28 @@
-import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, orderBy, limit, startAfter, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { estimateOneRepMax, isCountableSet } from '../utils/oneRepMax';
 
 export async function getPersonalRecords(userId) {
   const snapshot = await getDocs(collection(db, 'users', userId, 'personalRecords'));
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+// Genuine Firestore-level pagination for the full Personal Records page —
+// exercise count (400+) means a very active user could have a personal
+// record for a large share of them. Ordered by heaviestWeight (desc) to
+// match the sort order already used everywhere records are displayed.
+export async function getPersonalRecordsPage(userId, pageSize, cursor = null) {
+  const constraints = [orderBy('heaviestWeight', 'desc'), limit(pageSize)];
+  if (cursor) constraints.splice(1, 0, startAfter(cursor));
+
+  const q = query(collection(db, 'users', userId, 'personalRecords'), ...constraints);
+  const snapshot = await getDocs(q);
+
+  return {
+    records: snapshot.docs.map((d) => ({ id: d.id, ...d.data() })),
+    lastDoc: snapshot.docs[snapshot.docs.length - 1] || null,
+    hasMore: snapshot.docs.length === pageSize,
+  };
 }
 
 // Compares this session's best numbers for one exercise against the

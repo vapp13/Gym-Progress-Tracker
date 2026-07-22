@@ -1,15 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { getUserSessionsPage } from '../services/workoutSessions.service';
+import { getPersonalRecordsPage } from '../services/personalRecords.service';
 
 const PAGE_SIZE = 10;
 
-// Genuine Firestore-level pagination, separate from useWorkoutSessions
-// (which fetches everything) — used specifically for the Workout History
-// list view, since that's the one place session count can grow unbounded.
-export function usePaginatedWorkoutSessions() {
+// Genuine Firestore-level pagination, separate from usePersonalRecords
+// (which fetches everything) — used specifically for the full Personal
+// Records page, since exercise count (400+) means an active user could
+// have records for a large share of them.
+export function usePaginatedPersonalRecords() {
   const { user } = useAuth();
-  const [sessions, setSessions] = useState([]);
+  const [records, setRecords] = useState([]);
   const [cursor, setCursor] = useState(null);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -20,8 +21,8 @@ export function usePaginatedWorkoutSessions() {
     if (!user) return;
     setLoading(true);
     try {
-      const result = await getUserSessionsPage(user.uid, PAGE_SIZE);
-      setSessions(result.sessions);
+      const result = await getPersonalRecordsPage(user.uid, PAGE_SIZE);
+      setRecords(result.records);
       setCursor(result.lastDoc);
       setHasMore(result.hasMore);
       setError(null);
@@ -40,8 +41,8 @@ export function usePaginatedWorkoutSessions() {
     if (!user || !hasMore || loadingMore) return;
     setLoadingMore(true);
     try {
-      const result = await getUserSessionsPage(user.uid, PAGE_SIZE, cursor);
-      setSessions((prev) => [...prev, ...result.sessions]);
+      const result = await getPersonalRecordsPage(user.uid, PAGE_SIZE, cursor);
+      setRecords((prev) => [...prev, ...result.records]);
       setCursor(result.lastDoc);
       setHasMore(result.hasMore);
     } catch (err) {
@@ -51,5 +52,5 @@ export function usePaginatedWorkoutSessions() {
     }
   };
 
-  return { sessions, loading, loadingMore, hasMore, loadMore, error, refetch: fetchFirstPage };
+  return { records, loading, loadingMore, hasMore, loadMore, error, refetch: fetchFirstPage };
 }
