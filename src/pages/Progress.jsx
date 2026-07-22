@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, ChevronDown } from 'lucide-react';
+import { Plus, ChevronDown, Info } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useMeasurements } from '../hooks/useMeasurements';
 import { useProgressLogs } from '../hooks/useProgressLogs';
@@ -11,6 +11,7 @@ import { getPublicProfile } from '../services/publicProfile.service';
 import ProgressSummaryCards from '../features/progress/ProgressSummaryCards';
 import ActiveGoalCard from '../features/goals/ActiveGoalCard';
 import AchievementsList from '../features/profile/AchievementsList';
+import AvailableAchievementsModal from '../features/profile/AvailableAchievementsModal';
 import MeasurementSelectorModal from '../features/progress/MeasurementSelectorModal';
 import DateRangeFilter from '../features/progress/DateRangeFilter';
 import MeasurementChart from '../features/progress/MeasurementChart';
@@ -54,6 +55,7 @@ function Progress() {
   const [showHistory, setShowHistory] = useState(false);
   const [editingEntry, setEditingEntry] = useState(null);
   const [pendingDelete, setPendingDelete] = useState(null);
+  const [isAchievementsModalOpen, setIsAchievementsModalOpen] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -189,7 +191,16 @@ function Progress() {
       )}
 
       {/* Achievements */}
-      <div className="section-title" style={{ marginTop: 'var(--space-xl)' }}>Achievements</div>
+      <div className="page-header" style={{ marginTop: 'var(--space-xl)' }}>
+        <h2>Achievements</h2>
+        <button
+          className="session-icon-btn"
+          onClick={() => setIsAchievementsModalOpen(true)}
+          aria-label="View all available achievements"
+        >
+          <Info size={18} />
+        </button>
+      </div>
       <AchievementsList achievements={achievements} />
 
       {/* Personal Records */}
@@ -238,6 +249,12 @@ function Progress() {
         title="Delete Measurement"
         message="Delete this measurement entry? This will update all related graphs, summaries, and goal progress calculations, and can't be undone."
         confirmLabel="Delete"
+      />
+
+      <AvailableAchievementsModal
+        isOpen={isAchievementsModalOpen}
+        onClose={() => setIsAchievementsModalOpen(false)}
+        earnedAchievements={achievements}
       />
     </div>
   );
