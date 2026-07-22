@@ -8,6 +8,7 @@ import {
   where,
   orderBy,
   limit,
+  startAfter,
   serverTimestamp,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
@@ -156,4 +157,27 @@ export async function getUserSessions(userId) {
     id: doc.id,
     ...doc.data(),
   }));
+}
+
+// Genuine Firestore-level pagination (limit + startAfter), used only by
+// the Workout History list view — kept separate from getUserSessions
+// above so the many other consumers that need the full list (Dashboard,
+// streak/goal calculations, etc.) are completely unaffected.
+export async function getUserSessionsPage(userId, pageSize, cursor = null) {
+  const constraints = [
+    where('userId', '==', userId),
+    where('status', '==', 'completed'),
+    orderBy('startedAt', 'desc'),
+    limit(pageSize),
+  ];
+  if (cursor) constraints.splice(3, 0, startAfter(cursor));
+
+  const q = query(sessionsRef, ...constraints);
+  const snapshot = await getDocs(q);
+
+  return {
+    sessions: snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
+    lastDoc: snapshot.docs[snapshot.docs.length - 1] || null,
+    hasMore: snapshot.docs.length === pageSize,
+  };
 }

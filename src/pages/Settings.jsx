@@ -7,6 +7,7 @@ import TrainingPreferencesForm from '../features/profile/TrainingPreferencesForm
 import GymPreferencesForm from '../features/profile/GymPreferencesForm';
 import VisibilitySettingsForm from '../features/profile/VisibilitySettingsForm';
 import AppearanceSettingsCard from '../features/profile/AppearanceSettingsCard';
+import DataExportImportCard from '../features/profile/DataExportImportCard';
 import DataMaintenanceCard from '../features/profile/DataMaintenanceCard';
 import PageHeader from '../components/PageHeader';
 import Button from '../components/Button';
@@ -112,6 +113,8 @@ function Settings() {
         />
 
         <AppearanceSettingsCard />
+
+        <DataExportImportCard />
 
         <DataMaintenanceCard />
 

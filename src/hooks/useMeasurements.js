@@ -36,6 +36,16 @@ export function useMeasurements() {
     await fetchMeasurements();
   };
 
+  // For bulk import — writes every entry first, then refetches once at
+  // the end, rather than addEntry's one-write-one-refetch (which would
+  // mean a full collection re-read per row for a large import).
+  const bulkAddEntries = async (entriesData) => {
+    for (const entryData of entriesData) {
+      await addMeasurement(user.uid, entryData);
+    }
+    await fetchMeasurements();
+  };
+
   const editEntry = async (entryId, updates) => {
     await updateMeasurement(user.uid, entryId, updates);
     await fetchMeasurements();
@@ -46,5 +56,5 @@ export function useMeasurements() {
     await fetchMeasurements();
   };
 
-  return { measurements, loading, error, addEntry, editEntry, removeEntry, refetch: fetchMeasurements };
+  return { measurements, loading, error, addEntry, bulkAddEntries, editEntry, removeEntry, refetch: fetchMeasurements };
 }

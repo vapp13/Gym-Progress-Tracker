@@ -1,10 +1,12 @@
 import { useNavigate } from 'react-router-dom';
+import { Rss } from 'lucide-react';
 import { useFriends } from '../hooks/useFriends';
 import FriendCard from '../features/friends/FriendCard';
 import FriendRequestCard from '../features/friends/FriendRequestCard';
 import AddFriendForm from '../features/friends/AddFriendForm';
 import PageHeader from '../components/PageHeader';
 import Card from '../components/Card';
+import Button from '../components/Button';
 import EmptyState from '../components/EmptyState';
 import Skeleton from '../components/Skeleton';
 
@@ -26,6 +28,14 @@ function Friends() {
   return (
     <div className="page-container">
       <PageHeader title="Friends" showBack sticky />
+
+      {friends.length > 0 && (
+        <div style={{ marginBottom: 'var(--space-md)' }}>
+          <Button variant="secondary" icon={Rss} onClick={() => navigate('/activity')} style={{ width: '100%' }}>
+            View Activity Feed
+          </Button>
+        </div>
+      )}
 
       <Card>
         <AddFriendForm onSend={addFriend} />

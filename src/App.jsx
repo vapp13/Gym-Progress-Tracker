@@ -18,6 +18,7 @@ const PersonalRecords = lazy(() => import('./pages/PersonalRecords'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Settings = lazy(() => import('./pages/Settings'));
 const Friends = lazy(() => import('./pages/Friends'));
+const ActivityFeed = lazy(() => import('./pages/ActivityFeed'));
 const FriendActivity = lazy(() => import('./pages/FriendActivity'));
 const ExerciseHistory = lazy(() => import('./pages/ExerciseHistory'));
 const BodyMetrics = lazy(() => import('./pages/BodyMetrics'));
@@ -153,6 +154,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Friends />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/activity"
+            element={
+              <ProtectedRoute>
+                <ActivityFeed />
               </ProtectedRoute>
             }
           />
