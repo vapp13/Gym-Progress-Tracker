@@ -1,6 +1,7 @@
 import { MapPin } from 'lucide-react';
 import Card from '../../components/Card';
 import FilterChip from '../../components/FilterChip';
+import { toTitleCase } from '../../utils/textFormatting';
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const TIMES = ['morning', 'afternoon', 'evening'];
@@ -49,7 +50,7 @@ function GymPreferencesForm({ value, onChange }) {
             {DAYS.map((day) => (
               <FilterChip
                 key={day}
-                label={day}
+                label={toTitleCase(day)}
                 active={(value.typicalDays || []).includes(day)}
                 onClick={() => handleField('typicalDays', toggleValue(value.typicalDays || [], day))}
               />
@@ -63,7 +64,7 @@ function GymPreferencesForm({ value, onChange }) {
             {TIMES.map((time) => (
               <FilterChip
                 key={time}
-                label={time}
+                label={toTitleCase(time)}
                 active={(value.typicalTimes || []).includes(time)}
                 onClick={() => handleField('typicalTimes', toggleValue(value.typicalTimes || [], time))}
               />

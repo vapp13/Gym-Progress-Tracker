@@ -11,8 +11,8 @@ function getGoalLabel(goal) {
   return getGoalTypeConfig(goal.type)?.label || goal.type;
 }
 
-function GoalCard({ goal, onClick, onDelete, onArchive, onSetActive, onReactivate }) {
-  const progress = calculateGoalProgress(goal);
+function GoalCard({ goal, measurements, onClick, onDelete, onArchive, onSetActive, onReactivate }) {
+  const progress = calculateGoalProgress(goal, measurements);
   const bucket = getGoalBucket(goal);
 
   const stop = (fn) => (e) => {

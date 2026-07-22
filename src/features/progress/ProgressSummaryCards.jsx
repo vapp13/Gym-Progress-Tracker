@@ -1,20 +1,30 @@
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import Card from '../../components/Card';
-import { calculateGoalProgress } from '../../utils/goalProgress';
 import { formatWeight } from '../../utils/units';
+import { calculateAge } from '../../utils/age';
+import { calculateBMI, calculateBMR, calculateTDEE, getBMICategory } from '../../utils/bodyMetrics';
 
 function formatDate(dateString) {
   if (!dateString) return '—';
   return new Date(dateString).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
 
-function ProgressSummaryCards({ measurements, activeGoal, units }) {
+function ProgressSummaryCards({ measurements, units, profile }) {
   const latest = measurements[0];
   const first = measurements[measurements.length - 1];
   const weightChange = latest && first ? Math.round((latest.weight - first.weight) * 10) / 10 : null;
 
   const ChangeIcon = weightChange === null || weightChange === 0 ? Minus : weightChange > 0 ? TrendingUp : TrendingDown;
-  const goalProgress = activeGoal ? calculateGoalProgress(activeGoal) : null;
+
+  const height = profile?.profile?.height || null;
+  const age = calculateAge(profile?.profile?.dateOfBirth);
+  const gender = profile?.profile?.gender;
+  const activityLevel = profile?.profile?.activityLevel;
+  const weight = latest?.weight || null;
+
+  const bmi = weight && height ? calculateBMI(weight, height) : null;
+  const bmr = weight && height && age ? calculateBMR(weight, height, age, gender) : null;
+  const tdee = bmr ? calculateTDEE(bmr, activityLevel) : null;
 
   return (
     <Card>
@@ -31,12 +41,20 @@ function ProgressSummaryCards({ measurements, activeGoal, units }) {
           <span className="stat-box-label">Change Since First Entry</span>
         </div>
         <div className="stat-box">
-          <span className="stat-box-value">{goalProgress ? `${goalProgress.percent ?? 0}%` : '—'}</span>
-          <span className="stat-box-label">Active Goal Progress</span>
-        </div>
-        <div className="stat-box">
           <span className="stat-box-value" style={{ fontSize: 'var(--text-base)' }}>{formatDate(latest?.date)}</span>
           <span className="stat-box-label">Last Measurement</span>
+        </div>
+        <div className="stat-box">
+          <span className="stat-box-value">{bmi ?? '—'}</span>
+          <span className="stat-box-label">BMI{bmi && ` · ${getBMICategory(bmi)}`}</span>
+        </div>
+        <div className="stat-box">
+          <span className="stat-box-value">{bmr ?? '—'}{bmr && <span className="stat-box-unit">kcal</span>}</span>
+          <span className="stat-box-label">BMR</span>
+        </div>
+        <div className="stat-box">
+          <span className="stat-box-value">{tdee ?? '—'}{tdee && <span className="stat-box-unit">kcal/day</span>}</span>
+          <span className="stat-box-label">TDEE</span>
         </div>
       </div>
     </Card>

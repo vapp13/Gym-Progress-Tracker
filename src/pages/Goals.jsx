@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { useGoals } from '../hooks/useGoals';
+import { useMeasurements } from '../hooks/useMeasurements';
 import GoalCard from '../features/goals/GoalCard';
 import GoalForm from '../features/goals/GoalForm';
 import PageHeader from '../components/PageHeader';
@@ -14,6 +15,7 @@ import { getGoalBucket } from '../utils/goalBucket';
 
 function Goals() {
   const { goals, loading, error, addGoal, removeGoal, activateGoal, archive, reactivate } = useGoals();
+  const { measurements } = useMeasurements();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showCompleted, setShowCompleted] = useState(false);
@@ -42,6 +44,7 @@ function Goals() {
         <GoalCard
           key={goal.id}
           goal={goal}
+          measurements={measurements}
           onClick={() => navigate(`/goals/${goal.id}`)}
           onDelete={() => setPendingDelete(goal)}
           onArchive={() => archive(goal.id)}

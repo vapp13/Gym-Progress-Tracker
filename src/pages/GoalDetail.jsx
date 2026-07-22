@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Edit2, Star, Archive, Trash2, Plus, CheckCircle, RotateCcw } from 'lucide-react';
 import { useGoals } from '../hooks/useGoals';
 import { useGoalProgressLogs } from '../hooks/useGoalProgressLogs';
+import { useMeasurements } from '../hooks/useMeasurements';
 import { calculateGoalProgress } from '../utils/goalProgress';
 import { isLegacyGoal, getGoalTypeConfig } from '../utils/goalTypes';
 import { getGoalBucket } from '../utils/goalBucket';
@@ -64,6 +65,7 @@ function GoalDetail() {
   const navigate = useNavigate();
   const { goals, loading, editGoal, removeGoal, archive, complete, reactivate, activateGoal } = useGoals();
   const { logs, loading: logsLoading, addEntry, removeEntry } = useGoalProgressLogs(goalId);
+  const { measurements } = useMeasurements();
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isLogOpen, setIsLogOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -87,7 +89,7 @@ function GoalDetail() {
     );
   }
 
-  const progress = calculateGoalProgress(goal);
+  const progress = calculateGoalProgress(goal, measurements);
   const typeConfig = !isLegacyGoal(goal) ? getGoalTypeConfig(goal.type) : null;
   const bucket = getGoalBucket(goal);
 

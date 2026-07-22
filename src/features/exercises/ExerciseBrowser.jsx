@@ -28,7 +28,9 @@ function ExerciseBrowser({ selectionMode = false, onConfirmSelection }) {
   );
 
   const filteredExercises = useMemo(() => {
-    return exercises.filter((ex) => matchesFilters(ex, search, filters));
+    return exercises
+      .filter((ex) => matchesFilters(ex, search, filters))
+      .sort((a, b) => a.name.localeCompare(b.name));
   }, [exercises, search, filters]);
 
   const toggleSelection = (exerciseId) => {

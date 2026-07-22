@@ -1,19 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import { Info } from 'lucide-react';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useMeasurements } from '../hooks/useMeasurements';
 import PageHeader from '../components/PageHeader';
+import { calculateBMI, getBMICategory, calculateBMR, calculateTDEE } from '../utils/bodyMetrics';
 import { calculateAge } from '../utils/age';
-import {
-  calculateBMI,
-  getBMICategory,
-  calculateBMR,
-  calculateTDEE,
-  calculateCalorieTargets,
-  calculateIdealBodyWeight,
-  calculateBodySurfaceArea,
-} from '../utils/bodyMetrics';
 import Card from '../components/Card';
+import CalorieAndEstimatesSection from '../features/progress/CalorieAndEstimatesSection';
 import { SkeletonCard } from '../components/Skeleton';
 import EmptyState from '../components/EmptyState';
 
@@ -58,9 +50,6 @@ function BodyMetrics() {
   const bmiCategory = getBMICategory(bmi);
   const bmr = calculateBMR(weight, height, age, gender);
   const tdee = calculateTDEE(bmr, activityLevel);
-  const calorieTargets = calculateCalorieTargets(tdee);
-  const idealWeight = calculateIdealBodyWeight(height, gender);
-  const bsa = calculateBodySurfaceArea(weight, height);
 
   return (
     <div className="page-container">
@@ -80,27 +69,7 @@ function BodyMetrics() {
             <MetricRow label="TDEE" value={tdee} unit="kcal/day" sublabel="Total daily energy expenditure" />
           </Card>
 
-          <div className="section-title">Calorie Targets</div>
-          <Card>
-            <MetricRow label="Maintenance" value={calorieTargets?.maintenance} unit="kcal" />
-            <MetricRow label="Fat Loss" value={calorieTargets?.fatLoss} unit="kcal" sublabel="~500 kcal deficit" />
-            <MetricRow label="Muscle Gain" value={calorieTargets?.muscleGain} unit="kcal" sublabel="~300 kcal surplus" />
-          </Card>
-
-          <div className="section-title">Other Estimates</div>
-          <Card>
-            <MetricRow label="Ideal Body Weight" value={idealWeight} unit="kg" sublabel="Devine formula estimate" />
-            <MetricRow label="Body Surface Area" value={bsa} unit="m²" sublabel="Mosteller formula" />
-          </Card>
-
-          <div className="body-metrics-disclaimer">
-            <Info size={16} />
-            <p>
-              These are general estimates from standard formulas, not medical advice. BMI in particular
-              doesn't distinguish muscle mass from fat mass — a muscular person can show a high BMI
-              without being overweight. Consult a healthcare professional for personalized guidance.
-            </p>
-          </div>
+          <CalorieAndEstimatesSection profile={profile} weight={weight} />
         </>
       )}
     </div>

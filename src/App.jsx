@@ -14,6 +14,7 @@ const SessionDetail = lazy(() => import('./pages/SessionDetail'));
 const Goals = lazy(() => import('./pages/Goals'));
 const GoalDetail = lazy(() => import('./pages/GoalDetail'));
 const Progress = lazy(() => import('./pages/Progress'));
+const PersonalRecords = lazy(() => import('./pages/PersonalRecords'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Settings = lazy(() => import('./pages/Settings'));
 const Friends = lazy(() => import('./pages/Friends'));
@@ -119,6 +120,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Progress />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/personal-records"
+            element={
+              <ProtectedRoute>
+                <PersonalRecords />
               </ProtectedRoute>
             }
           />

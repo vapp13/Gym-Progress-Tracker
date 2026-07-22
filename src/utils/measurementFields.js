@@ -14,7 +14,7 @@ export const MEASUREMENT_FIELDS = [
     help: 'The percentage of your body weight that is fat. Usually obtained from a smart/body-composition scale, skinfold calipers, or a DEXA scan at a clinic or gym.',
   },
   {
-    key: 'leanBodyMass', label: 'Lean Body Mass', path: 'leanBodyMass', unitType: 'weight', derivable: true, section: 'composition',
+    key: 'leanBodyMass', label: 'Fat-Free Body Weight', path: 'leanBodyMass', unitType: 'weight', derivable: true, section: 'composition',
     help: 'Your total body weight minus fat mass — everything else (muscle, bone, water, organs). Most smart scales calculate this automatically alongside body fat %.',
   },
   {

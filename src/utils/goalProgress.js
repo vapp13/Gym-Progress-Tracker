@@ -34,10 +34,49 @@ function extractNumbers(goal) {
   };
 }
 
+// Which body measurement field to compare for a "did the last entry move
+// the right way" check — only goal types with an obvious matching field.
+// Everything else (strength, endurance, flexibility, cardio, general
+// fitness) has no obvious single measurement to compare and keeps using
+// the pacing-based fallback below.
+const TREND_MEASUREMENT_FIELD = {
+  weight: 'weight',
+  'lose-weight': 'weight',
+  'gain-weight': 'weight',
+  'maintain-weight': 'weight',
+  'reduce-body-fat': 'bodyFatPercent',
+  'build-muscle': 'muscleMass',
+};
+
+const NOISE_TOLERANCE = 0.1;
+
+// Compares the two most recent measurement entries that actually have the
+// relevant field recorded — this is what answers "did you move the right
+// way recently", which the pacing heuristic below can't tell you (a goal
+// can be on-pace overall while its last entry went the wrong way).
+function calculateRecentTrend(goal, direction, measurements) {
+  const fieldKey = TREND_MEASUREMENT_FIELD[goal.type];
+  if (!fieldKey || !measurements || measurements.length === 0) return null;
+
+  const withValue = [...measurements]
+    .filter((m) => m[fieldKey] !== undefined && m[fieldKey] !== null)
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  if (withValue.length < 2) return null;
+
+  const [latest, previous] = withValue;
+  const delta = latest[fieldKey] - previous[fieldKey];
+
+  if (Math.abs(delta) <= NOISE_TOLERANCE) return 'Stable';
+  if (direction === 'decrease') return delta < 0 ? 'Improving' : 'Behind';
+  return delta > 0 ? 'Improving' : 'Behind';
+}
+
 // Improving / Stable / Behind — compares the rate of progress achieved so
 // far against the rate still required to hit the target by the deadline.
-// Doesn't need a full history log, just start/current/target/dates.
-function calculateTrend({ start, current, target, direction }, createdAt, deadline) {
+// Used as a fallback for goal types with no measurement history to check
+// recency against directly.
+function calculatePacingTrend({ start, current, target, direction }, createdAt, deadline) {
   if (direction === 'none' || direction === 'maintain') return null;
   if (start === undefined || start === null || target === undefined || target === null) return null;
   if (!createdAt || !deadline) return null;
@@ -59,7 +98,7 @@ function calculateTrend({ start, current, target, direction }, createdAt, deadli
   return 'Behind';
 }
 
-export function calculateGoalProgress(goal) {
+export function calculateGoalProgress(goal, measurements = []) {
   const { start, current, target, direction, hasMetric } = extractNumbers(goal);
   const createdAt = toDate(goal.createdAt);
   const deadline = toDate(goal.deadline);
@@ -107,13 +146,16 @@ export function calculateGoalProgress(goal) {
     estimatedCompletionDate = new Date(createdAt.getTime() + totalDaysProjected * 86400000);
   }
 
+  const trend = calculateRecentTrend(goal, direction, measurements)
+    ?? calculatePacingTrend({ start, current, target, direction }, createdAt, deadline);
+
   return {
     percent,
     remaining,
     unit: getGoalTypeConfig(goal.type)?.unit ?? '',
     daysRemaining,
     estimatedCompletionDate,
-    trend: calculateTrend({ start, current, target, direction }, createdAt, deadline),
+    trend,
     isAchieved,
   };
 }

@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Dumbbell, ClipboardList, TrendingUp, Target, Home } from 'lucide-react';
+import { Dumbbell, ClipboardList, UserCircle, Target, Home } from 'lucide-react';
 import './BottomNav.css';
 
 const ITEMS = [
@@ -7,7 +7,7 @@ const ITEMS = [
   { to: '/plans', label: 'Plans', icon: ClipboardList },
   { to: '/', label: 'Home', icon: Home, end: true },
   { to: '/goals', label: 'Goals', icon: Target },
-  { to: '/progress', label: 'Progress', icon: TrendingUp },
+  { to: '/progress', label: 'Profile', icon: UserCircle },
 ];
 
 function BottomNav() {

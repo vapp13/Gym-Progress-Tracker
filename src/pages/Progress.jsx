@@ -1,12 +1,15 @@
 import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Plus, ChevronDown } from 'lucide-react';
 import { useMeasurements } from '../hooks/useMeasurements';
 import { useProgressLogs } from '../hooks/useProgressLogs';
 import { useGoals } from '../hooks/useGoals';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { usePersonalRecords } from '../hooks/usePersonalRecords';
 import ProgressSummaryCards from '../features/progress/ProgressSummaryCards';
-import MeasurementSelector from '../features/progress/MeasurementSelector';
+import ActiveGoalCard from '../features/goals/ActiveGoalCard';
+import MeasurementSelectorModal from '../features/progress/MeasurementSelectorModal';
+import DateRangeFilter from '../features/progress/DateRangeFilter';
 import MeasurementChart from '../features/progress/MeasurementChart';
 import MeasurementForm from '../features/progress/MeasurementForm';
 import MeasurementHistoryList from '../features/progress/MeasurementHistoryList';
@@ -21,8 +24,10 @@ import ConfirmModal from '../components/ConfirmModal';
 import Button from '../components/Button';
 import { SkeletonCard } from '../components/Skeleton';
 import { getMeasurementField } from '../utils/measurementFields';
+import { filterByDateRange } from '../utils/dateRangeFilter';
 
 const WEIGHT_GOAL_TYPES = ['weight', 'lose-weight', 'gain-weight', 'maintain-weight'];
+const TOP_RECORDS_LIMIT = 7;
 
 function getWeightGoalTarget(goal) {
   if (!goal) return undefined;
@@ -30,13 +35,16 @@ function getWeightGoalTarget(goal) {
 }
 
 function Progress() {
+  const navigate = useNavigate();
   const { measurements, loading: measurementsLoading, addEntry, editEntry, removeEntry } = useMeasurements();
   const { logs, loading: logsLoading } = useProgressLogs();
   const { goals, loading: goalsLoading } = useGoals();
   const { data: profile, loading: profileLoading } = useUserProfile();
   const { records: personalRecords, loading: recordsLoading } = usePersonalRecords();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMeasurementPickerOpen, setIsMeasurementPickerOpen] = useState(false);
   const [selectedMeasurement, setSelectedMeasurement] = useState('weight');
+  const [dateRange, setDateRange] = useState('6m');
   const [selectedExerciseId, setSelectedExerciseId] = useState('');
   const [showHistory, setShowHistory] = useState(false);
   const [editingEntry, setEditingEntry] = useState(null);
@@ -48,6 +56,11 @@ function Progress() {
   const selectedField = getMeasurementField(selectedMeasurement);
 
   const isLoading = measurementsLoading || goalsLoading || profileLoading;
+
+  // Date range filtering is purely client-side on the measurements already
+  // fetched for this page — no extra reads, just fewer points plotted so
+  // the graph stays readable once there's a long history.
+  const chartMeasurements = filterByDateRange(measurements, dateRange);
 
   const handleSaveMeasurement = async (data) => {
     await addEntry(data);
@@ -66,36 +79,57 @@ function Progress() {
 
   return (
     <div className="page-container">
-      <PageHeader title="Progress" showBack sticky />
+      <PageHeader title="Profile" showBack sticky />
 
+      {/* Body Metrics */}
       {isLoading ? (
         <SkeletonCard />
       ) : (
         <div style={{ marginBottom: 'var(--space-lg)' }}>
-          <ProgressSummaryCards measurements={measurements} activeGoal={activeGoal} units={units} />
+          <ProgressSummaryCards measurements={measurements} units={units} profile={profile} />
         </div>
       )}
 
-      <div className="page-header">
-        <h2>Body Measurements</h2>
-        <Button variant="secondary" size="sm" icon={Plus} onClick={() => setIsModalOpen(true)}>
-          Add
+      {/* Active Goal — display-only summary */}
+      {!isLoading && activeGoal && (
+        <div style={{ marginBottom: 'var(--space-lg)' }}>
+          <div className="section-title" style={{ marginTop: 0 }}>Active Goal</div>
+          <ActiveGoalCard goal={activeGoal} measurements={measurements} />
+        </div>
+      )}
+
+      {/* Body Measurements — actions */}
+      <div className="section-title">Body Measurements</div>
+      <div style={{ display: 'flex', gap: 'var(--space-sm)', marginBottom: 'var(--space-lg)' }}>
+        <Button variant="primary" icon={Plus} onClick={() => setIsModalOpen(true)} style={{ flex: 1 }}>
+          Add Body Measurement
+        </Button>
+        <Button variant="secondary" onClick={() => navigate('/body-metrics')} style={{ flex: 1 }}>
+          View Body Metrics
         </Button>
       </div>
 
+      <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-base)', margin: '0 0 var(--space-sm) 0' }}>
+        Measurement Progress
+      </h3>
       {isLoading ? (
         <SkeletonCard />
       ) : (
         <>
-          <div style={{ marginBottom: 'var(--space-md)' }}>
-            <MeasurementSelector
-              value={selectedMeasurement}
-              onChange={setSelectedMeasurement}
-              measurements={measurements}
-            />
-          </div>
+          <button
+            type="button"
+            className="set-row-type-trigger"
+            onClick={() => setIsMeasurementPickerOpen(true)}
+            style={{ marginBottom: 'var(--space-sm)' }}
+          >
+            <span style={{ flex: 1, textAlign: 'left' }}>{selectedField?.label}</span>
+            <ChevronDown size={16} />
+          </button>
+
+          <DateRangeFilter value={dateRange} onChange={setDateRange} />
+
           <MeasurementChart
-            measurements={measurements}
+            measurements={chartMeasurements}
             fieldKey={selectedMeasurement}
             units={units}
             targetWeight={getWeightGoalTarget(activeWeightGoal)}
@@ -123,9 +157,11 @@ function Progress() {
         </>
       )}
 
-      <div className="section-title">Exercise Progress</div>
+      <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-base)', margin: 'var(--space-lg) 0 var(--space-sm) 0' }}>
+        Exercise Progress
+      </h3>
       <div style={{ marginBottom: 'var(--space-md)' }}>
-        <ExerciseSelector value={selectedExerciseId} onChange={setSelectedExerciseId} />
+        <ExerciseSelector value={selectedExerciseId} onChange={setSelectedExerciseId} logs={logs} />
       </div>
       {logsLoading || recordsLoading ? (
         <SkeletonCard />
@@ -140,8 +176,14 @@ function Progress() {
         </>
       )}
 
-      <div className="section-title">Personal Records</div>
-      <ProgressPersonalRecords />
+      {/* Personal Records */}
+      <div className="page-header" style={{ marginTop: 'var(--space-xl)' }}>
+        <h2>Personal Records</h2>
+        <Button variant="secondary" size="sm" onClick={() => navigate('/personal-records')}>
+          View All Records
+        </Button>
+      </div>
+      <ProgressPersonalRecords limit={TOP_RECORDS_LIMIT} />
 
       <Modal
         isOpen={isModalOpen}
@@ -155,6 +197,14 @@ function Progress() {
           profile={profile}
         />
       </Modal>
+
+      <MeasurementSelectorModal
+        isOpen={isMeasurementPickerOpen}
+        onClose={() => setIsMeasurementPickerOpen(false)}
+        value={selectedMeasurement}
+        onChange={setSelectedMeasurement}
+        measurements={measurements}
+      />
 
       <EditMeasurementModal
         isOpen={Boolean(editingEntry)}
