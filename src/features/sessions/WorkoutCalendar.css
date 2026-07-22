@@ -1,0 +1,74 @@
+.workout-calendar {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.workout-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+}
+
+.workout-calendar-month {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-sm);
+}
+
+.workout-calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: var(--space-xs);
+}
+
+.workout-calendar-weekdays span {
+  text-align: center;
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
+
+.workout-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.workout-calendar-cell {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  cursor: default;
+}
+
+.workout-calendar-cell.has-session {
+  color: var(--color-text);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.workout-calendar-cell.has-session:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.workout-calendar-cell.is-today {
+  outline: 1.5px solid var(--color-primary);
+}
+
+.workout-calendar-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+}

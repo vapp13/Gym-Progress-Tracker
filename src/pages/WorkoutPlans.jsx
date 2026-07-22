@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, PlayCircle, Dumbbell, Zap, History } from 'lucide-react';
+import { Plus, PlayCircle, Dumbbell, Zap, History, LayoutTemplate } from 'lucide-react';
 import { useWorkoutPlans } from '../hooks/useWorkoutPlans';
 import { useWorkoutSessions } from '../hooks/useWorkoutSessions';
 import PlanCard from '../features/workouts/PlanCard';
+import PlanTemplatesModal from '../features/workouts/PlanTemplatesModal';
 import SessionSummaryCard from '../features/sessions/SessionSummaryCard';
 import PageHeader from '../components/PageHeader';
 import EmptyState from '../components/EmptyState';
@@ -19,6 +20,7 @@ function WorkoutPlans() {
   const { sessions, loading: sessionsLoading, findActiveSession } = useWorkoutSessions();
   const [activeSession, setActiveSession] = useState(null);
   const [pendingDelete, setPendingDelete] = useState(null);
+  const [isTemplatesOpen, setIsTemplatesOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,6 +39,11 @@ function WorkoutPlans() {
   const confirmDelete = () => {
     if (pendingDelete) removePlan(pendingDelete.id);
     setPendingDelete(null);
+  };
+
+  const handleUseTemplate = (planData) => {
+    setIsTemplatesOpen(false);
+    navigate('/plans/new', { state: { templateData: planData } });
   };
 
   return (
@@ -63,12 +70,18 @@ function WorkoutPlans() {
 
       <div className="section-title">Plans</div>
 
-      <div style={{ display: 'flex', gap: 'var(--space-sm)', marginBottom: 'var(--space-md)' }}>
+      <div style={{ display: 'flex', gap: 'var(--space-sm)', marginBottom: 'var(--space-sm)' }}>
         <Button variant="secondary" icon={Plus} onClick={() => navigate('/plans/new')} style={{ flex: 1 }}>
           New Plan
         </Button>
         <Button variant="secondary" icon={Dumbbell} onClick={() => navigate('/exercises')} style={{ flex: 1 }}>
           Exercises
+        </Button>
+      </div>
+
+      <div style={{ marginBottom: 'var(--space-md)' }}>
+        <Button variant="secondary" icon={LayoutTemplate} onClick={() => setIsTemplatesOpen(true)} style={{ width: '100%' }}>
+          Use a Template
         </Button>
       </div>
 
@@ -129,6 +142,12 @@ function WorkoutPlans() {
         title="Delete Plan"
         message={`Delete "${pendingDelete?.name}"? This can't be undone.`}
         confirmLabel="Delete"
+      />
+
+      <PlanTemplatesModal
+        isOpen={isTemplatesOpen}
+        onClose={() => setIsTemplatesOpen(false)}
+        onUseTemplate={handleUseTemplate}
       />
     </div>
   );

@@ -1,4 +1,5 @@
-import { X, Link2, Link2Off } from 'lucide-react';
+import { Trash2, Link2, Link2Off } from 'lucide-react';
+import ExerciseInfoHeader from '../exercises/ExerciseInfoHeader';
 import './PlanExerciseRow.css';
 
 const SECOND_OPTIONS = [0, 10, 20, 30, 40, 50];
@@ -13,7 +14,7 @@ function toMinSec(totalSeconds) {
   return { minutes, seconds: roundedSeconds };
 }
 
-function PlanExerciseRow({ entry, isLinkedToPrevious, canLinkToPrevious, onChange, onRemove, onToggleSuperset }) {
+function PlanExerciseRow({ entry, isLinkedToPrevious, canLinkToPrevious, exercises, onChange, onRemove, onToggleSuperset }) {
   const handleField = (field, value) => {
     onChange({ ...entry, [field]: value });
   };
@@ -46,13 +47,20 @@ function PlanExerciseRow({ entry, isLinkedToPrevious, canLinkToPrevious, onChang
 
       <div className="plan-exercise-row">
         <div className="plan-exercise-row-header">
-          <h4>{entry.exerciseName}</h4>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <ExerciseInfoHeader
+              exerciseId={entry.exerciseId}
+              exerciseName={entry.exerciseName}
+              exercises={exercises}
+              headingTag="h4"
+            />
+          </div>
           <button
             className="plan-exercise-row-remove"
             onClick={onRemove}
             aria-label={`Remove ${entry.exerciseName}`}
           >
-            <X size={16} />
+            <Trash2 size={16} />
           </button>
         </div>
 

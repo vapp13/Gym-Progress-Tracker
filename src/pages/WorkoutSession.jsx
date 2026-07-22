@@ -4,6 +4,7 @@ import { CheckCircle, Pause, XCircle, Plus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useWorkoutPlans } from '../hooks/useWorkoutPlans';
 import { useWorkoutSessions } from '../hooks/useWorkoutSessions';
+import { useExercises } from '../hooks/useExercises';
 import { getExercisePerformanceBatch, getExercisePerformance } from '../services/exercisePerformance.service';
 import { sessionRoute } from '../utils/sessionRoute';
 import SessionExerciseCard from '../features/sessions/SessionExerciseCard';
@@ -61,6 +62,7 @@ function WorkoutSession() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { plans, loading: plansLoading } = useWorkoutPlans();
+  const { exercises: exerciseLibrary } = useExercises();
   const { start, saveProgress, complete, pause, resume, discard, findActiveSession } = useWorkoutSessions();
 
   const [sessionId, setSessionId] = useState(null);
@@ -191,6 +193,11 @@ function WorkoutSession() {
     }
   };
 
+  const handleRemoveExercise = (index) => {
+    setExercises((prev) => prev.filter((_, i) => i !== index));
+    setRestTrigger((prev) => (prev?.exerciseIndex === index ? null : prev));
+  };
+
   const handleAddExtraExercises = async (newExercises) => {
     setExercises((prev) => [...prev, ...newExercises.map(buildExtraExercise)]);
     // Fetch previous-performance for these too, same as the plan-provided
@@ -283,7 +290,9 @@ function WorkoutSession() {
               <SessionExerciseCard
                 exercise={exercise}
                 previous={previousPerformance[exercise.exerciseId]}
+                exercises={exerciseLibrary}
                 onChange={(updated) => handleExerciseChange(index, updated)}
+                onRemoveExercise={() => handleRemoveExercise(index)}
               />
               {restTrigger?.exerciseIndex === index && (
                 <RestTimer

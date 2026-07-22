@@ -1,13 +1,14 @@
-import { Plus } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import SetRow from './SetRow';
 import Button from '../../components/Button';
+import ExerciseInfoHeader from '../exercises/ExerciseInfoHeader';
 import './SessionExerciseCard.css';
 
 function formatPreviousSets(sets) {
   return sets.map((s) => `${s.weight}kg × ${s.reps}`).join(', ');
 }
 
-function SessionExerciseCard({ exercise, previous, onChange }) {
+function SessionExerciseCard({ exercise, previous, exercises, onChange, onRemoveExercise }) {
   const handleSetChange = (setIndex, updatedSet) => {
     const updatedSets = exercise.sets.map((set, i) =>
       i === setIndex ? updatedSet : set
@@ -36,7 +37,25 @@ function SessionExerciseCard({ exercise, previous, onChange }) {
 
   return (
     <div className="session-exercise-card">
-      <h3>{exercise.exerciseName}</h3>
+      <div className="session-exercise-card-header">
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <ExerciseInfoHeader
+            exerciseId={exercise.exerciseId}
+            exerciseName={exercise.exerciseName}
+            exercises={exercises}
+            headingTag="h3"
+          />
+        </div>
+        {onRemoveExercise && (
+          <button
+            className="session-exercise-card-remove"
+            onClick={onRemoveExercise}
+            aria-label={`Remove ${exercise.exerciseName}`}
+          >
+            <Trash2 size={16} />
+          </button>
+        )}
+      </div>
 
       {previous?.sets?.length > 0 && (
         <p className="session-exercise-previous">

@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { ChevronDown, Trash2 } from 'lucide-react';
+import { ChevronDown, Trash2, Weight } from 'lucide-react';
 import SetTypeModal from './SetTypeModal';
+import PlateCalculatorModal from './PlateCalculatorModal';
 import { getSetTypeConfig } from '../../utils/setTypes';
 import './SetRow.css';
 
 function SetRow({ setNumber, set, onChange, onRemove, canRemove }) {
   const [expanded, setExpanded] = useState(false);
   const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
+  const [isPlatesModalOpen, setIsPlatesModalOpen] = useState(false);
 
   const handleField = (field, value) => {
     const updated = { ...set, [field]: value };
@@ -115,6 +117,16 @@ function SetRow({ setNumber, set, onChange, onRemove, canRemove }) {
               />
             </label>
           </div>
+
+          <button
+            type="button"
+            className="set-row-plates-trigger"
+            onClick={() => setIsPlatesModalOpen(true)}
+            disabled={!set.weight}
+          >
+            <Weight size={14} />
+            Plate Calculator
+          </button>
         </div>
       )}
 
@@ -123,6 +135,12 @@ function SetRow({ setNumber, set, onChange, onRemove, canRemove }) {
         onClose={() => setIsTypeModalOpen(false)}
         value={set.type || 'working'}
         onChange={(type) => handleField('type', type)}
+      />
+
+      <PlateCalculatorModal
+        isOpen={isPlatesModalOpen}
+        onClose={() => setIsPlatesModalOpen(false)}
+        weight={set.weight}
       />
     </div>
   );

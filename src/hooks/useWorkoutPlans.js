@@ -32,8 +32,9 @@ export function useWorkoutPlans() {
   }, [fetchPlans]);
 
   const addPlan = async (planData) => {
-    await createPlan(user.uid, planData);
+    const planId = await createPlan(user.uid, planData);
     await fetchPlans();
+    return planId;
   };
 
   const editPlan = async (planId, updates) => {

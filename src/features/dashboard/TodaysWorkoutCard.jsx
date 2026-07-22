@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PlayCircle, Zap, ChevronDown, Check } from 'lucide-react';
+import { PlayCircle, Zap, ChevronDown, Check, PartyPopper } from 'lucide-react';
 import { useWorkoutPlans } from '../../hooks/useWorkoutPlans';
+import { useWorkoutSessions } from '../../hooks/useWorkoutSessions';
 import Card from '../../components/Card';
 import Button from '../../components/Button';
 import { SkeletonCard } from '../../components/Skeleton';
@@ -12,6 +13,7 @@ const WEEKDAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
 function TodaysWorkoutCard() {
   const { plans, loading } = useWorkoutPlans();
+  const { sessions, loading: sessionsLoading } = useWorkoutSessions();
   const navigate = useNavigate();
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [selectedPlanId, setSelectedPlanId] = useState(null);
@@ -22,7 +24,38 @@ function TodaysWorkoutCard() {
     [plans, todayKey]
   );
 
-  if (loading) return <SkeletonCard />;
+  const completedToday = useMemo(() => {
+    const todayDateKey = new Date().toISOString().split('T')[0];
+    return sessions.find((s) => {
+      if (s.status !== 'completed' || !s.completedAt?.toDate) return false;
+      return s.completedAt.toDate().toISOString().split('T')[0] === todayDateKey;
+    });
+  }, [sessions]);
+
+  if (loading || sessionsLoading) return <SkeletonCard />;
+
+  if (completedToday) {
+    return (
+      <Card>
+        <div className="card-icon-row">
+          <span className="card-icon card-icon-success"><PartyPopper size={18} /></span>
+          <span className="card-eyebrow">Today's Workout</span>
+        </div>
+        <h3 style={{ margin: '10px 0 4px 0' }}>Done for today!</h3>
+        <p style={{ margin: 0, color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>
+          You completed {completedToday.planName || 'a workout'} today. Nice work.
+        </p>
+        <Button
+          variant="secondary"
+          icon={Zap}
+          onClick={() => navigate('/free-workout')}
+          style={{ width: '100%', marginTop: 'var(--space-sm)' }}
+        >
+          Train Again
+        </Button>
+      </Card>
+    );
+  }
 
   const defaultPlan = scheduledToday || plans[0];
   const selectedPlan = plans.find((p) => p.id === selectedPlanId) || defaultPlan;

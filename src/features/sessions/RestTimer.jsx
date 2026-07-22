@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { playRestCompleteAlert } from '../../utils/restTimerAlert';
 import './RestTimer.css';
 
 function RestTimer({ seconds, onComplete, onSkip }) {
@@ -6,6 +7,7 @@ function RestTimer({ seconds, onComplete, onSkip }) {
 
   useEffect(() => {
     if (remaining <= 0) {
+      playRestCompleteAlert();
       onComplete();
       return;
     }
