@@ -54,8 +54,8 @@ export function useWorkoutSessions() {
     await updateSession(sessionId, updates);
   };
 
-  const complete = async (sessionId, exercises, notes = '') => {
-    await completeSession(sessionId, user.uid, exercises, notes);
+  const complete = async (sessionId, exercises, notes = '', planName = null) => {
+    await completeSession(sessionId, user.uid, exercises, notes, planName);
     await fetchSessions();
   };
 

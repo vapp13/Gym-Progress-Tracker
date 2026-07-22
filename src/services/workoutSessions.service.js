@@ -11,7 +11,8 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { bumpPublicStreak } from './publicProfile.service';
+import { bumpPublicStreak, syncAchievements, syncTrainingActivity } from './publicProfile.service';
+import { getUserProfile } from './userProfile.service';
 import { saveExercisePerformance } from './exercisePerformance.service';
 import { updatePersonalRecord } from './personalRecords.service';
 import { isCountableSet, estimateOneRepMax } from '../utils/oneRepMax';
@@ -121,7 +122,7 @@ async function writePerformanceAndRecords(userId, exercises) {
   return results.filter(Boolean);
 }
 
-export async function completeSession(sessionId, userId, exercises, notes = '') {
+export async function completeSession(sessionId, userId, exercises, notes = '', planName = null) {
   const prsAchieved = await writePerformanceAndRecords(userId, exercises);
 
   const sessionDoc = doc(db, 'workoutSessions', sessionId);
@@ -134,7 +135,14 @@ export async function completeSession(sessionId, userId, exercises, notes = '') 
   });
 
   await writeProgressLogs(userId, exercises);
-  await bumpPublicStreak(userId);
+  const streak = await bumpPublicStreak(userId);
+  await syncAchievements(userId, { streak, prJustAchieved: prsAchieved.length > 0 });
+
+  // Only share the workout name with friends if the user has explicitly
+  // opted in — checked against their own settings, not written otherwise.
+  const profile = await getUserProfile(userId);
+  const shareActivity = profile?.visibility?.trainingActivity === 'friends';
+  await syncTrainingActivity(userId, shareActivity ? planName : null);
 }
 
 export async function getUserSessions(userId) {

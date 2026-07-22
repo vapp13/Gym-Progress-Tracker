@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { useFriends } from '../hooks/useFriends';
 import FriendCard from '../features/friends/FriendCard';
 import FriendRequestCard from '../features/friends/FriendRequestCard';
@@ -8,6 +9,7 @@ import EmptyState from '../components/EmptyState';
 import Skeleton from '../components/Skeleton';
 
 function Friends() {
+  const navigate = useNavigate();
   const {
     friends,
     incomingRequests,
@@ -58,6 +60,7 @@ function Friends() {
               <FriendCard
                 key={friend.id}
                 friend={friend}
+                onClick={() => navigate(`/friends/${friend.id}`)}
                 onRemove={() => unfriend(friend.id)}
               />
             ))

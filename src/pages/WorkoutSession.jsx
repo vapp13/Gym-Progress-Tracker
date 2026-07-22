@@ -7,6 +7,7 @@ import { useWorkoutSessions } from '../hooks/useWorkoutSessions';
 import { getExercisePerformanceBatch, getExercisePerformance } from '../services/exercisePerformance.service';
 import { sessionRoute } from '../utils/sessionRoute';
 import SessionExerciseCard from '../features/sessions/SessionExerciseCard';
+import RestTimer from '../features/sessions/RestTimer';
 import ExercisePicker from '../features/workouts/ExercisePicker';
 import Button from '../components/Button';
 import ConfirmModal from '../components/ConfirmModal';
@@ -70,6 +71,7 @@ function WorkoutSession() {
   const [previousPerformance, setPreviousPerformance] = useState({});
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [isDiscardOpen, setIsDiscardOpen] = useState(false);
+  const [restTrigger, setRestTrigger] = useState(null); // { exerciseIndex, restSeconds } | null
   const hasInitialized = useRef(false);
   const skipNextAutosave = useRef(true);
   const autosaveTimer = useRef(null);
@@ -159,10 +161,34 @@ function WorkoutSession() {
     return () => clearTimeout(autosaveTimer.current);
   }, [exercises, notes, sessionId, saveProgress]);
 
+  // A superset only rests once per round (after its LAST exercise's set),
+  // not after every exercise within the group — that's the whole point of
+  // pairing them. Non-superset exercises behave exactly as before.
+  const isLastInSupersetGroup = (index) => {
+    const exercise = exercises[index];
+    if (!exercise.supersetGroupId) return true;
+    const next = exercises[index + 1];
+    return !(next && next.supersetGroupId === exercise.supersetGroupId);
+  };
+
   const handleExerciseChange = (index, updatedExercise) => {
+    const previousExercise = exercises[index];
     setExercises((prev) =>
       prev.map((ex, i) => (i === index ? updatedExercise : ex))
     );
+
+    const newlyCompletedIndex = updatedExercise.sets.findIndex(
+      (set, i) => set.completed && !previousExercise.sets[i]?.completed
+    );
+    if (newlyCompletedIndex === -1) return;
+
+    const isLastSetOfExercise = newlyCompletedIndex === updatedExercise.sets.length - 1;
+
+    if (isLastInSupersetGroup(index) && !isLastSetOfExercise) {
+      setRestTrigger({ exerciseIndex: index, restSeconds: updatedExercise.restSeconds });
+    } else {
+      setRestTrigger(null);
+    }
   };
 
   const handleAddExtraExercises = async (newExercises) => {
@@ -193,7 +219,7 @@ function WorkoutSession() {
 
   const handleFinish = async () => {
     if (autosaveTimer.current) clearTimeout(autosaveTimer.current);
-    await complete(sessionId, exercises, notes);
+    await complete(sessionId, exercises, notes, planName);
     navigate('/plans');
   };
 
@@ -259,6 +285,13 @@ function WorkoutSession() {
                 previous={previousPerformance[exercise.exerciseId]}
                 onChange={(updated) => handleExerciseChange(index, updated)}
               />
+              {restTrigger?.exerciseIndex === index && (
+                <RestTimer
+                  seconds={restTrigger.restSeconds}
+                  onComplete={() => setRestTrigger(null)}
+                  onSkip={() => setRestTrigger(null)}
+                />
+              )}
             </div>
           );
         })

@@ -1,5 +1,6 @@
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { getNewlyEarnedAchievements } from '../utils/achievements';
 
 export async function getPublicProfile(userId) {
   const ref = doc(db, 'publicProfiles', userId);
@@ -21,6 +22,8 @@ export async function ensurePublicProfile(userId, { displayName, photoURL }) {
       streak: 0,
       lastWorkoutDate: null,
       achievements: [],
+      prCount: 0,
+      goalsCompletedCount: 0,
     });
   }
 }
@@ -34,6 +37,8 @@ export async function syncPublicProfileBasics(userId, { displayName, photoURL })
 
 // Incrementally updates the denormalized streak whenever a workout
 // session completes, without needing to re-read full session history.
+// Returns the new streak value so callers (e.g. achievement syncing)
+// don't need a second read.
 export async function bumpPublicStreak(userId) {
   const ref = doc(db, 'publicProfiles', userId);
   const snap = await getDoc(ref);
@@ -59,4 +64,46 @@ export async function bumpPublicStreak(userId) {
     { streak, lastWorkoutDate: todayKey, achievements: existing.achievements || [] },
     { merge: true }
   );
+
+  return streak;
+}
+
+// Shares (or clears) the most recent workout's name with friends, but
+// only ever called with a value when the user's own visibility setting
+// permits it — the check happens at the call site, not here, so this
+// stays a simple write.
+export async function syncTrainingActivity(userId, lastWorkoutName) {
+  const ref = doc(db, 'publicProfiles', userId);
+  await setDoc(ref, { lastWorkoutName: lastWorkoutName || null }, { merge: true });
+}
+
+// Recomputes achievements from current stats and writes only the newly
+// earned ones — called after any moment that could unlock one (finishing
+// a workout, completing a goal). `deltas` lets callers report a PR or
+// goal completion just achieved without a second read of those collections.
+export async function syncAchievements(userId, { streak, prJustAchieved, goalJustCompleted } = {}) {
+  const ref = doc(db, 'publicProfiles', userId);
+  const snap = await getDoc(ref);
+  const existing = snap.exists() ? snap.data() : {};
+
+  const prCount = (existing.prCount || 0) + (prJustAchieved ? 1 : 0);
+  const goalsCompletedCount = (existing.goalsCompletedCount || 0) + (goalJustCompleted ? 1 : 0);
+  const existingAchievements = existing.achievements || [];
+  const existingKeys = existingAchievements.map((a) => a.key);
+
+  const newlyEarned = getNewlyEarnedAchievements(
+    { streak: streak ?? existing.streak ?? 0, prCount, goalsCompletedCount },
+    existingKeys
+  );
+
+  const updates = { prCount, goalsCompletedCount };
+  if (newlyEarned.length > 0) {
+    updates.achievements = [
+      ...existingAchievements,
+      ...newlyEarned.map((a) => ({ key: a.key, label: a.label, earnedAt: new Date().toISOString() })),
+    ];
+  }
+
+  await setDoc(ref, updates, { merge: true });
+  return newlyEarned;
 }

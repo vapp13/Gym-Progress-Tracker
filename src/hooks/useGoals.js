@@ -10,6 +10,7 @@ import {
   completeGoal,
   unarchiveGoal,
 } from '../services/goals.service';
+import { syncAchievements } from '../services/publicProfile.service';
 
 export function useGoals() {
   const { user } = useAuth();
@@ -66,6 +67,7 @@ export function useGoals() {
 
   const complete = async (goalId) => {
     await completeGoal(goalId);
+    await syncAchievements(user.uid, { goalJustCompleted: true });
     await fetchGoals();
   };
 

@@ -1,13 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, ChevronDown } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import { useMeasurements } from '../hooks/useMeasurements';
 import { useProgressLogs } from '../hooks/useProgressLogs';
 import { useGoals } from '../hooks/useGoals';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { usePersonalRecords } from '../hooks/usePersonalRecords';
+import { getPublicProfile } from '../services/publicProfile.service';
 import ProgressSummaryCards from '../features/progress/ProgressSummaryCards';
 import ActiveGoalCard from '../features/goals/ActiveGoalCard';
+import AchievementsList from '../features/profile/AchievementsList';
 import MeasurementSelectorModal from '../features/progress/MeasurementSelectorModal';
 import DateRangeFilter from '../features/progress/DateRangeFilter';
 import MeasurementChart from '../features/progress/MeasurementChart';
@@ -36,11 +39,13 @@ function getWeightGoalTarget(goal) {
 
 function Progress() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { measurements, loading: measurementsLoading, addEntry, editEntry, removeEntry } = useMeasurements();
   const { logs, loading: logsLoading } = useProgressLogs();
   const { goals, loading: goalsLoading } = useGoals();
   const { data: profile, loading: profileLoading } = useUserProfile();
   const { records: personalRecords, loading: recordsLoading } = usePersonalRecords();
+  const [achievements, setAchievements] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMeasurementPickerOpen, setIsMeasurementPickerOpen] = useState(false);
   const [selectedMeasurement, setSelectedMeasurement] = useState('weight');
@@ -49,6 +54,13 @@ function Progress() {
   const [showHistory, setShowHistory] = useState(false);
   const [editingEntry, setEditingEntry] = useState(null);
   const [pendingDelete, setPendingDelete] = useState(null);
+
+  useEffect(() => {
+    if (!user) return;
+    getPublicProfile(user.uid).then((data) => {
+      setAchievements(data?.achievements || []);
+    });
+  }, [user]);
 
   const units = profile?.preferences?.units || 'metric';
   const activeGoal = goals.find((g) => g.isActive);
@@ -175,6 +187,10 @@ function Progress() {
           <ExerciseProgressChart logs={logs} exerciseId={selectedExerciseId} />
         </>
       )}
+
+      {/* Achievements */}
+      <div className="section-title" style={{ marginTop: 'var(--space-xl)' }}>Achievements</div>
+      <AchievementsList achievements={achievements} />
 
       {/* Personal Records */}
       <div className="page-header" style={{ marginTop: 'var(--space-xl)' }}>

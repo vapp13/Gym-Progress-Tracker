@@ -1,7 +1,5 @@
-import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import SetRow from './SetRow';
-import RestTimer from './RestTimer';
 import Button from '../../components/Button';
 import './SessionExerciseCard.css';
 
@@ -10,19 +8,11 @@ function formatPreviousSets(sets) {
 }
 
 function SessionExerciseCard({ exercise, previous, onChange }) {
-  const [restingAfterIndex, setRestingAfterIndex] = useState(null);
-
   const handleSetChange = (setIndex, updatedSet) => {
-    const wasCompleted = exercise.sets[setIndex].completed;
     const updatedSets = exercise.sets.map((set, i) =>
       i === setIndex ? updatedSet : set
     );
     onChange({ ...exercise, sets: updatedSets });
-
-    const isLastSet = setIndex === exercise.sets.length - 1;
-    if (!wasCompleted && updatedSet.completed && !isLastSet) {
-      setRestingAfterIndex(setIndex);
-    }
   };
 
   const handleAddSet = () => {
@@ -42,7 +32,6 @@ function SessionExerciseCard({ exercise, previous, onChange }) {
     if (exercise.sets.length <= 1) return;
     const updatedSets = exercise.sets.filter((_, i) => i !== setIndex);
     onChange({ ...exercise, sets: updatedSets });
-    if (restingAfterIndex === setIndex) setRestingAfterIndex(null);
   };
 
   return (
@@ -56,22 +45,14 @@ function SessionExerciseCard({ exercise, previous, onChange }) {
       )}
 
       {exercise.sets.map((set, index) => (
-        <div key={index}>
-          <SetRow
-            setNumber={index + 1}
-            set={set}
-            onChange={(updated) => handleSetChange(index, updated)}
-            onRemove={() => handleRemoveSet(index)}
-            canRemove={exercise.sets.length > 1}
-          />
-          {restingAfterIndex === index && (
-            <RestTimer
-              seconds={exercise.restSeconds}
-              onComplete={() => setRestingAfterIndex(null)}
-              onSkip={() => setRestingAfterIndex(null)}
-            />
-          )}
-        </div>
+        <SetRow
+          key={index}
+          setNumber={index + 1}
+          set={set}
+          onChange={(updated) => handleSetChange(index, updated)}
+          onRemove={() => handleRemoveSet(index)}
+          canRemove={exercise.sets.length > 1}
+        />
       ))}
 
       <Button

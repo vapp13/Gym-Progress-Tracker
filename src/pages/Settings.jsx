@@ -6,6 +6,7 @@ import FitnessInfoForm from '../features/profile/FitnessInfoForm';
 import TrainingPreferencesForm from '../features/profile/TrainingPreferencesForm';
 import GymPreferencesForm from '../features/profile/GymPreferencesForm';
 import VisibilitySettingsForm from '../features/profile/VisibilitySettingsForm';
+import AppearanceSettingsCard from '../features/profile/AppearanceSettingsCard';
 import DataMaintenanceCard from '../features/profile/DataMaintenanceCard';
 import PageHeader from '../components/PageHeader';
 import Button from '../components/Button';
@@ -109,6 +110,8 @@ function Settings() {
           value={form.visibility}
           onChange={(updated) => updateSection('visibility', updated)}
         />
+
+        <AppearanceSettingsCard />
 
         <DataMaintenanceCard />
 
