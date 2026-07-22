@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { TrendingUp } from 'lucide-react';
 import Modal from '../../components/Modal';
 import Button from '../../components/Button';
+import ExerciseImageCarousel from './ExerciseImageCarousel';
 import { splitNumberedSteps, toArray } from '../../utils/textFormatting';
 import { normalizeDifficulty } from '../../utils/difficulty';
 import './ExerciseDetailModal.css';
@@ -24,17 +25,7 @@ function ExerciseDetailModal({ exercise, isOpen, onClose }) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={exercise.name}>
       <div className="exercise-detail">
-        {exercise.imageUrl ? (
-          <img
-            src={exercise.imageUrl}
-            alt={exercise.name}
-            className="exercise-detail-media"
-          />
-        ) : (
-          <div className="exercise-detail-media-placeholder">
-            <span>No image yet</span>
-          </div>
-        )}
+        <ExerciseImageCarousel key={exercise.id} imageId={exercise.imageId} />
 
         <div className="exercise-detail-meta">
           <span className="exercise-detail-badge">{exercise.muscleGroup}</span>
